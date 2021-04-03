@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/chat"
+        android:title="Chat"
+        android:visible="true" />
+    <item
+        android:icon="@drawable/phonecall"
+        android:title="Call"
+        android:visible="true" />
+    <item
+        android:icon="@drawable/management"
+        android:title="Manager"
+        android:visible="true" />
+</menu>
