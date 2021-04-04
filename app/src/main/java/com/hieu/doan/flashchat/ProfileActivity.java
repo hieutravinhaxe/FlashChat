@@ -22,6 +22,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+
 public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
@@ -72,10 +74,24 @@ public class ProfileActivity extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         String imageUri = uri.toString();
 
-                                        String uId = auth.getUid();
+                                        final String uId = auth.getUid();
                                         String phone = auth.getCurrentUser().getPhoneNumber();
                                         String userName = name.getText().toString();
                                         String email = auth.getCurrentUser().getEmail();
+
+                                        /*ArrayList<String> list = new ArrayList<String>();
+                                        list.add("1234");*/
+                                        Friends f = new Friends();
+                                        database.getReference()
+                                                .child("listFriends")
+                                                .child(uId)
+                                                .setValue(null)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(getApplicationContext(), "suss", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
 
                                         User user = new User(uId,email, phone, imageUri, userName);
                                         database.getReference()
@@ -113,6 +129,16 @@ public class ProfileActivity extends AppCompatActivity {
                                     finish();
                                 }
                             });
+                    /*database.getReference()
+                            .child("users")
+                            .child(uId)
+                            .child("listFriends")
+                            .setValue("");
+                    database.getReference()
+                            .child("users")
+                            .child(uId)
+                            .child("listConver")
+                            .setValue("");*/
                 }
             }
         });
