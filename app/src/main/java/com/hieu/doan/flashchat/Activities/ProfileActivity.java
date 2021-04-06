@@ -1,4 +1,4 @@
-package com.hieu.doan.flashchat;
+package com.hieu.doan.flashchat.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,8 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.util.ArrayList;
+import com.hieu.doan.flashchat.R;
+import com.hieu.doan.flashchat.Models.User;
 
 public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
@@ -79,20 +79,6 @@ public class ProfileActivity extends AppCompatActivity {
                                         String userName = name.getText().toString();
                                         String email = auth.getCurrentUser().getEmail();
 
-                                        /*ArrayList<String> list = new ArrayList<String>();
-                                        list.add("1234");*/
-                                        Friends f = new Friends();
-                                        database.getReference()
-                                                .child("listFriends")
-                                                .child(uId)
-                                                .setValue(null)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Toast.makeText(getApplicationContext(), "suss", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-
                                         User user = new User(uId,email, phone, imageUri, userName);
                                         database.getReference()
                                                 .child("users")
@@ -101,8 +87,26 @@ public class ProfileActivity extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                                                        finish();
+                                                        database.getReference()
+                                                                .child("messages")
+                                                                .child(uId)
+                                                                .setValue("null")
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        database.getReference()
+                                                                                .child("friends")
+                                                                                .child(uId)
+                                                                                .setValue("null")
+                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                    @Override
+                                                                                    public void onSuccess(Void aVoid) {
+                                                                                        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                                                                                        finish();
+                                                                                    }
+                                                                                });
+                                                                    }
+                                                                });
                                                     }
                                                 });
                                     }
@@ -112,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity {
                     });
                 }
                 else{
-                    String uId = auth.getUid();
+                    final String uId = auth.getUid();
                     String phone = auth.getCurrentUser().getPhoneNumber();
                     String userName = name.getText().toString();
                     String email = auth.getCurrentUser().getEmail();
@@ -125,20 +129,28 @@ public class ProfileActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                                    finish();
+                                    database.getReference()
+                                            .child("friends")
+                                            .child(uId)
+                                            .setValue("null")
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    database.getReference()
+                                                            .child("messages")
+                                                            .child(uId)
+                                                            .setValue("null")
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                                                                    finish();
+                                                                }
+                                                            });
+                                                }
+                                            });
                                 }
                             });
-                    /*database.getReference()
-                            .child("users")
-                            .child(uId)
-                            .child("listFriends")
-                            .setValue("");
-                    database.getReference()
-                            .child("users")
-                            .child(uId)
-                            .child("listConver")
-                            .setValue("");*/
                 }
             }
         });

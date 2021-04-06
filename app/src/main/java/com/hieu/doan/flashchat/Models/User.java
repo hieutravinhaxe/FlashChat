@@ -1,4 +1,4 @@
-package com.hieu.doan.flashchat;
+package com.hieu.doan.flashchat.Models;
 
 public class User {
     String id, email, phone, image, name;

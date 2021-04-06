@@ -1,4 +1,4 @@
-package com.hieu.doan.flashchat;
+package com.hieu.doan.flashchat.Models;
 
 import java.util.ArrayList;
 
