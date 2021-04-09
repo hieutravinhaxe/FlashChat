@@ -4,8 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     ArrayList<User> listConver ;
     ListConverAdapter adapter;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recyclerView);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.menuChat);
+
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
 
@@ -37,6 +45,33 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ListConverAdapter(this, listConver);
         recyclerView.setAdapter(adapter);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menuChat:
+                        //Toast.makeText(getApplicationContext(), "chat", Toast.LENGTH_SHORT).show();
+                        /*startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();*/
+                        return true;
+                    case R.id.menuFriend:
+                        //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), CallActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
+                        return true;
+                    case R.id.menuManager:
+                        //Toast.makeText(getApplicationContext(), "manager", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), ManagerActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
+                        return true;
+                }
+                return false;
+            }
+        });
 
         database.getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override

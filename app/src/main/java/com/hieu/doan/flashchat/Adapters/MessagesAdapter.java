@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hieu.doan.flashchat.Activities.ChatActivity;
 import com.hieu.doan.flashchat.Models.Message;
@@ -62,11 +63,28 @@ public class MessagesAdapter extends RecyclerView.Adapter {
 
         if(holder.getClass() == SendViewHolder.class){
             SendViewHolder sendViewHolder = (SendViewHolder) holder;
-            sendViewHolder.sendTV.setText(message.getMsg());
+            if(message.getMsg().equals("photo")){
+                sendViewHolder.sendTV.setVisibility(View.GONE);
+                sendViewHolder.image.setVisibility(View.VISIBLE);
+                Glide.with(context).load(message.getImageUri()).into(sendViewHolder.image);
+            }
+            else {
+                sendViewHolder.sendTV.setVisibility(View.VISIBLE);
+                sendViewHolder.image.setVisibility(View.GONE);
+                sendViewHolder.sendTV.setText(message.getMsg());
+            }
         }
         else{
             ReceiveViewHolder receiveViewHolder = (ReceiveViewHolder) holder;
-            receiveViewHolder.receiveTV.setText(message.getMsg());
+            if(message.getMsg().equals("photo")){
+                receiveViewHolder.receiveTV.setVisibility(View.GONE);
+                receiveViewHolder.image.setVisibility(View.VISIBLE);
+                Glide.with(context).load(message.getImageUri()).into(receiveViewHolder.image);
+            }else{
+                receiveViewHolder.receiveTV.setVisibility(View.VISIBLE);
+                receiveViewHolder.image.setVisibility(View.GONE);
+                receiveViewHolder.receiveTV.setText(message.getMsg());
+            }
         }
     }
 
@@ -77,21 +95,25 @@ public class MessagesAdapter extends RecyclerView.Adapter {
 
     public class SendViewHolder extends RecyclerView.ViewHolder{
         private TextView sendTV;
+        private ImageView image;
 
         public SendViewHolder (View itemView){
             super(itemView);
 
             sendTV = itemView.findViewById(R.id.SendTextView);
+            image = itemView.findViewById(R.id.imageSend);
         }
     }
 
     public class ReceiveViewHolder extends RecyclerView.ViewHolder{
         private TextView receiveTV;
+        private ImageView image;
 
         public ReceiveViewHolder (View itemView){
             super(itemView);
 
             receiveTV = itemView.findViewById(R.id.ReceiveTextView);
+            image = itemView.findViewById(R.id.imageRecieve);
         }
     }
 }

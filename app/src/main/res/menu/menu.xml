@@ -2,15 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/menuChat"
         android:icon="@drawable/chat"
         android:title="Chat"
         android:visible="true" />
     <item
-        android:icon="@drawable/phonecall"
+        android:id="@+id/menuFriend"
+        android:icon="@drawable/honesty"
         android:title="Call"
         android:visible="true" />
     <item
+        android:id="@+id/menuGroup"
+        android:icon="@drawable/group"
+        android:title="Group"
+        android:visible="true"
+        />
+    <item
+        android:id="@+id/menuManager"
         android:icon="@drawable/management"
         android:title="Manager"
         android:visible="true" />
+
 </menu>

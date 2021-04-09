@@ -1,9 +1,17 @@
 package com.hieu.doan.flashchat.Models;
 
 public class Message {
-    private String msgID, msg, senderID;
+    private String msgID, msg, senderID, imageUri;
     private long  timestamp;
     private int felling;
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
 
     public Message(){
 
