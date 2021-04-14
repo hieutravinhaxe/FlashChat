@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Activities.ManagerActivity"></activity>
+        <activity android:name=".Activities.GroupChatActivity"></activity>
+        <activity android:name=".Activities.ManagerActivity" />
         <activity android:name=".Activities.CallActivity" />
         <activity android:name=".Activities.ChatActivity" />
         <activity android:name=".Activities.ProfileActivity" />
