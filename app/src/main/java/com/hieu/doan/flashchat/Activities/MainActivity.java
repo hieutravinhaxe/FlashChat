@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         finish();*/
                         return true;
-                    case R.id.menuFriend:
+                    case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), CallActivity.class));
+                        startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
                         overridePendingTransition(0,0);
                         finish();
                         return true;

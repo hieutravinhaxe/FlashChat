@@ -3,21 +3,32 @@ package com.hieu.doan.flashchat.Models;
 import java.util.ArrayList;
 
 public class Friends {
-    ArrayList<String> listFriends;
-
-
-    public ArrayList<String> getListFriends() {
-        return listFriends;
-    }
-
-    public Friends(ArrayList<String> listFriends) {
-        this.listFriends = listFriends;
-    }
+    String name;
+    String image;
 
     public Friends() {
     }
 
-    public void setListFriends(ArrayList<String> listFriends) {
-        this.listFriends = listFriends;
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Friends(String name, String image) {
+        this.name = name;
+        this.image = image;
+    }
+
+
 }

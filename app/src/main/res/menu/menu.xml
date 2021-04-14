@@ -7,9 +7,9 @@
         android:title="Chat"
         android:visible="true" />
     <item
-        android:id="@+id/menuFriend"
+        android:id="@+id/menuFriends"
         android:icon="@drawable/honesty"
-        android:title="Call"
+        android:title="Friends"
         android:visible="true" />
     <item
         android:id="@+id/menuGroup"
