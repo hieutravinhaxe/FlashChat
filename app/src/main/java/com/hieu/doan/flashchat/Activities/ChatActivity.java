@@ -199,10 +199,10 @@ public class ChatActivity extends AppCompatActivity {
                                         Date date = new Date();
                                         final Message message = new Message(msgText, sendID, date.getTime());
                                         message.setImageUri(pathImage);
-                                        message.setMsg("photo");
+                                        message.setMsg("photofefededeofkt");
 
                                         HashMap<String, Object> lastMsgObj = new HashMap<>();
-                                        lastMsgObj.put("lastMsg", message.getMsg());
+                                        lastMsgObj.put("lastMsg", message.getMsg().equals("photofefededeofkt")?"Hình ảnh":message.getMsg());
                                         lastMsgObj.put("lastMsgTime", message.getTimestamp());
 
                                         database.getReference().child("chats").child(sendRoom).updateChildren(lastMsgObj);

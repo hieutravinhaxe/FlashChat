@@ -87,26 +87,8 @@ public class ProfileActivity extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        database.getReference()
-                                                                .child("messages")
-                                                                .child(uId)
-                                                                .setValue("null")
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void aVoid) {
-                                                                        database.getReference()
-                                                                                .child("friends")
-                                                                                .child(uId)
-                                                                                .setValue("null")
-                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                    @Override
-                                                                                    public void onSuccess(Void aVoid) {
-                                                                                        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                                                                                        finish();
-                                                                                    }
-                                                                                });
-                                                                    }
-                                                                });
+                                                        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                                                        finish();
                                                     }
                                                 });
                                     }
@@ -129,26 +111,8 @@ public class ProfileActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    database.getReference()
-                                            .child("friends")
-                                            .child(uId)
-                                            .setValue("null")
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    database.getReference()
-                                                            .child("messages")
-                                                            .child(uId)
-                                                            .setValue("null")
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-                                                                    finish();
-                                                                }
-                                                            });
-                                                }
-                                            });
+                                    startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                                    finish();
                                 }
                             });
                 }

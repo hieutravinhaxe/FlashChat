@@ -37,8 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
-
         phoneNumber = findViewById(R.id.phoneEditText);
         pwd = findViewById(R.id.pwdEditText);
         rePwd = findViewById(R.id.rePwdEditText);

@@ -31,9 +31,9 @@ public class ManagerActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         finish();
                         return true;
-                    case R.id.menuFriend:
+                    case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), CallActivity.class));
+                        startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
                         overridePendingTransition(0,0);
                         finish();
                         return true;

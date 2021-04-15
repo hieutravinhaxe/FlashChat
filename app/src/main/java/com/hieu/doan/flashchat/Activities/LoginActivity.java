@@ -3,6 +3,7 @@ package com.hieu.doan.flashchat.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +22,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText email, pwd;
     Button login;
     TextView register;
+    TextView resetPwd;
     FirebaseAuth fAuth;
+    ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +35,19 @@ public class LoginActivity extends AppCompatActivity {
         pwd = findViewById(R.id.pwdEditText);
         register = findViewById(R.id.regisTextView);
         login = findViewById(R.id.btnLogin);
+        resetPwd = findViewById(R.id.resetPwd);
         fAuth = FirebaseAuth.getInstance();
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Wait just moment");
+        dialog.setCancelable(false);
+
+        resetPwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, ForgotPassword.class));
+            }
+        });
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,15 +60,18 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.show();
                 String emailUser = email.getText().toString();
                 String password = pwd.getText().toString();
                 fAuth.signInWithEmailAndPassword(emailUser, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            dialog.dismiss();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }else{
+                            dialog.dismiss();
                             Toast.makeText(getApplicationContext(), task.getException().getLocalizedMessage(),Toast.LENGTH_LONG).show();
                         }
                     }

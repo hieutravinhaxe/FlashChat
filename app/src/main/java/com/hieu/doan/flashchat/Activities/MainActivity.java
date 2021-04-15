@@ -1,16 +1,20 @@
 package com.hieu.doan.flashchat.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<User> listConver ;
     ListConverAdapter adapter;
     BottomNavigationView bottomNavigationView;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage("Your messages are loading...");
+        dialog.setCancelable(false);
+
 
         listConver = new ArrayList<User>();
 
@@ -56,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         finish();*/
                         return true;
-                    case R.id.menuFriend:
+                    case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), CallActivity.class));
+                        startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
                         overridePendingTransition(0,0);
                         finish();
                         return true;
@@ -73,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+        /*database.getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listConver.clear();
@@ -84,6 +94,40 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
+        dialog.show();
+        database.getReference().child("chats").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listConver.clear();
+                final String uID = auth.getUid();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    final String idChat = dataSnapshot.getKey();
+                    database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot snapshot1: snapshot.getChildren()){
+                                User u = snapshot1.getValue(User.class);
+                                if(idChat.equals(uID+u.getId())){
+                                    listConver.add(u);
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
             }
 
             @Override
