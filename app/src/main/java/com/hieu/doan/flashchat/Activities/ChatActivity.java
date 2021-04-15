@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,7 +40,7 @@ import java.util.HashMap;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private ImageView imageView, sendBtn, sendImage;
+    private ImageView imageView, sendBtn, sendImage, attachBtn;
     private TextView textView;
     private EditText msgBox;
     private RecyclerView recyclerView;
@@ -62,6 +63,7 @@ public class ChatActivity extends AppCompatActivity {
         sendBtn = findViewById(R.id.sendBtn);
         msgBox = findViewById(R.id.msgBox);
         sendImage = findViewById(R.id.image);
+        attachBtn = findViewById(R.id.attach);
 
         dialog = new ProgressDialog(this);
         dialog.setMessage("Đang tải hình lên");
@@ -125,6 +127,15 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        attachBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("*");
+                startActivityForResult(intent,1212);
+            }
+        });
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +187,9 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1212){
+            Toast.makeText(this, "file tải lên", Toast.LENGTH_SHORT).show();
+        }
 
         if(requestCode == 1234){
             if(data != null){

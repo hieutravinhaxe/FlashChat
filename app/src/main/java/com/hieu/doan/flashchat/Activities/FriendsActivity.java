@@ -67,10 +67,11 @@ public class FriendsActivity extends AppCompatActivity {
                         for(DataSnapshot snapshot1: snapshot.getChildren()) {
                             String friend = snapshot.getValue().toString();
                             int length = friend.length();
-                            char status  = friend.charAt(length - 2);
+                            String st = snapshot1.child("status").getValue().toString();
+                            //char status  = friend.charAt(length - 2);
                             Log.d("chientran", String.valueOf(status));
                             final String userID = snapshot1.getKey();
-                            if (status == '1'){
+                            if (st.equals("1")){
 
                                 database.getReference().child("users").addValueEventListener(new ValueEventListener() {
                                     @Override
@@ -120,16 +121,16 @@ public class FriendsActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.menuChat:
                         //Toast.makeText(getApplicationContext(), "chat", Toast.LENGTH_SHORT).show();
-                            /*startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             overridePendingTransition(0,0);
-                            finish();*/
+                            finish();
                         return true;
                     case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
+                        /*startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
                         overridePendingTransition(0,0);
                         finish();
-                        return true;
+                        return true;*/
                     case R.id.menuManager:
                         //Toast.makeText(getApplicationContext(), "manager", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), ManagerActivity.class));
