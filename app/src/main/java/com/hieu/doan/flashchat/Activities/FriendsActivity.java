@@ -69,7 +69,7 @@ public class FriendsActivity extends AppCompatActivity {
                             int length = friend.length();
                             String st = snapshot1.child("status").getValue().toString();
                             //char status  = friend.charAt(length - 2);
-                            Log.d("chientran", String.valueOf(status));
+                            Log.d("chientran", String.valueOf(st));
                             final String userID = snapshot1.getKey();
                             if (st.equals("1")){
 
