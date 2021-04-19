@@ -36,6 +36,17 @@
             android:padding="10dp"
             android:text="TextView"
             android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/attachFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:text="TextView"
+            android:textSize="15dp"
+            android:textStyle="italic"
+            android:visibility="gone" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
