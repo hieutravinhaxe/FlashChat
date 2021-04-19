@@ -131,6 +131,11 @@ public class FriendsActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         finish();
                         return true;*/
+                    case R.id.menuGroup:
+                        startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
+                        return true;
                     case R.id.menuManager:
                         //Toast.makeText(getApplicationContext(), "manager", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), ManagerActivity.class));
