@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Activities.CreateGroupActivity"></activity>
+        <activity android:name=".Activities.AddMemberActivity"></activity>
+        <activity android:name=".Activities.ListMemberActivity" />
+        <activity android:name=".Activities.CreateGroupActivity" />
         <activity android:name=".Activities.GroupsActivity" />
         <activity android:name=".Activities.ForgotPassword" />
         <activity android:name=".Activities.GroupChatActivity" />

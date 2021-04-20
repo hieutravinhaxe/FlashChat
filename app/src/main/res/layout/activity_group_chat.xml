@@ -28,7 +28,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/msgBox"
+                android:id="@+id/msgBoxGroup"
                 android:layout_width="260dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -39,16 +39,16 @@
                 android:padding="15dp" />
 
             <ImageView
-                android:id="@+id/image"
-                android:layout_width="2dp"
+                android:id="@+id/imageSendGroup"
+                android:layout_width="20dp"
                 android:layout_height="54dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/camera" />
 
             <ImageView
-                android:id="@+id/attach"
-                android:layout_width="7dp"
+                android:id="@+id/attachGroup"
+                android:layout_width="20dp"
                 android:layout_height="54dp"
                 android:layout_marginRight="10sp"
                 android:layout_weight="1"
@@ -58,7 +58,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewGroup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
@@ -71,7 +71,7 @@
         app:reverseLayout="false" />
 
     <ImageView
-        android:id="@+id/sendBtn"
+        android:id="@+id/sendBtnGroup"
         android:layout_width="54dp"
         android:layout_height="53dp"
         android:layout_marginStart="4dp"
@@ -118,13 +118,23 @@
                 android:textSize="20dp" />
 
             <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="34dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/btnAddMember"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:padding="15dp"
-                app:srcCompat="@drawable/phonecall"
-                app:tint="@color/cardview_light_background" />
+                app:tint="@color/white"
+                app:srcCompat="@drawable/plus" />
+
+            <ImageView
+                android:id="@+id/btnListMember"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                app:tint="@color/white"
+                app:srcCompat="@drawable/info"
+                android:contentDescription="TODO" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

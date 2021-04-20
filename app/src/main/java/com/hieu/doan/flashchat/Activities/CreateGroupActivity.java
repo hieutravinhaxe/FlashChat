@@ -35,7 +35,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     private EditText groupName;
     private Calendar calendar = Calendar.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseStorage storage;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private ProgressDialog dialog;
     @Override
@@ -58,8 +58,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Chưa nhập tên group", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    final Group g = new Group(calendar.getTimeInMillis()+"", groupName.getText().toString(), imageGroupUri==null?"undefined":imageGroupUri.toString());
-                    final StorageReference reference = storage.getReference().child("Profiles").child(g.getId());
+                    final String groupId = calendar.getTimeInMillis()+"";
+                    final StorageReference reference = storage.getReference().child("Profiles").child(groupId);
                     if(imageGroupUri != null){
                         reference.putFile(imageGroupUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                             @Override
@@ -69,6 +69,9 @@ public class CreateGroupActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             String imageUri = uri.toString();
+
+                                            Group g = new Group(groupId, groupName.getText().toString(), imageUri);
+
                                             database.getReference()
                                                     .child("groups")
                                                     .child(g.getId())
@@ -77,8 +80,9 @@ public class CreateGroupActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             database.getReference().child("groups")
-                                                                    .child(g.getId())
+                                                                    .child(groupId)
                                                                     .child("members")
+                                                                    .push()
                                                                     .setValue(auth.getUid())
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
@@ -96,6 +100,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                         });
                     }
                     else {
+                        Group g = new Group(groupId, groupName.getText().toString(), "undefined");
+
                         database.getReference()
                                 .child("groups")
                                 .child(g.getId())
@@ -104,7 +110,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         database.getReference().child("groups")
-                                                .child(g.getId())
+                                                .child(groupId)
                                                 .child("members")
                                                 .setValue(auth.getUid())
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {

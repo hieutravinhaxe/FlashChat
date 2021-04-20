@@ -9,6 +9,9 @@ public class Group {
         this.imageUri = imageUri;
     }
 
+    public Group() {
+    }
+
     public String getId() {
         return id;
     }
