@@ -4,14 +4,34 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
+
+import java.util.ArrayList;
 
 public class ManagerActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
+    private ImageView avt;
+    private TextView name, phone, email;
+    private Button btnEdit, btnChangePwd;
+    private FirebaseDatabase database;
+    private FirebaseAuth auth;
+    private ArrayList<User> user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +40,48 @@ public class ManagerActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.menuManager);
+
+        avt = findViewById(R.id.avt);
+        name = findViewById(R.id.name);
+        phone = findViewById(R.id.phone);
+        email = findViewById(R.id.email);
+        btnEdit = findViewById(R.id.btnEdit);
+        btnChangePwd = findViewById(R.id.btnChangePwd);
+
+        database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+        database.getReference().child("users").child(auth.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                name.setText(user.getName());
+                phone.setText(user.getPhone());
+                email.setText(user.getEmail());
+                if(user.getImage().equals("undefined")){
+                    avt.setImageResource(R.drawable.profile);
+                }else {
+                    Glide.with(ManagerActivity.this).load(user.getImage()).into(avt);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ManagerActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

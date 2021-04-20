@@ -79,6 +79,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
             public void onClick(View view) {
                 Intent intent = new Intent(FriendsActivity.this, FriendRequestActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -91,16 +92,8 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         listFriends.clear();
                         for(DataSnapshot snapshot1: snapshot.getChildren()) {
-<<<<<<< HEAD
                             String st = snapshot1.child("status").getValue().toString();
 
-=======
-                            String friend = snapshot.getValue().toString();
-                            int length = friend.length();
-                            String st = snapshot1.child("status").getValue().toString();
-                            //char status  = friend.charAt(length - 2);
-                            Log.d("chientran", String.valueOf(st));
->>>>>>> 917d36c5db0b2c5cdfd6be5d41ec11a334ed7ece
                             final String userID = snapshot1.getKey();
                             if (st.equals("1")){
 
@@ -138,24 +131,22 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
 
 
 
-//
-//
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.menuChat:
                         //Toast.makeText(getApplicationContext(), "chat", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            overridePendingTransition(0,0);
-                            finish();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
-                        /*startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
-                        overridePendingTransition(0,0);
-                        finish();
-                        return true;*/
+//                        startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
+//                        overridePendingTransition(0,0);
+//                        finish();
+                        return true;
                     case R.id.menuManager:
                         //Toast.makeText(getApplicationContext(), "manager", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), ManagerActivity.class));
@@ -178,17 +169,6 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
 
     @Override
     public void applyText(final String email) {
-//        database.getReference()
-//                .child("users")
-//                .child(auth.getUid())
-//                .child("friends")
-//                .child(friend.getIdUser()).
-//                setValue(friend.getStatus()).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//
-//            }
-//        });
 
         database.getReference()
                 .child("users")

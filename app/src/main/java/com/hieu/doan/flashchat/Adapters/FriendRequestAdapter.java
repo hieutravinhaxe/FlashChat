@@ -80,6 +80,13 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
                     }
                 });
+
+                builder.setNegativeButton("Cancle",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
                 builder.show();
             }
         });

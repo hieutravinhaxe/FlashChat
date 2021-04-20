@@ -21,21 +21,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:background="#009688"
+            android:background="@android:color/holo_blue_light"
             >
 
 
             <TextView
-                android:id="@+id/nameAvatar"
+                android:id="@+id/title"
                 android:layout_width="249dp"
                 android:layout_height="match_parent"
                 android:layout_margin="0dp"
                 android:layout_weight="1"
-                android:background="#009688"
                 android:gravity="center_vertical"
                 android:padding="10sp"
                 android:text="List Friends"
-
                 android:textColor="#F8F6F6"
                 android:textSize="25dp"
                  />
@@ -45,7 +43,6 @@
                 android:layout_width="6dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#009688"
                 android:paddingStart="19dp"
                 android:paddingTop="19dp"
                 android:paddingBottom="19dp"

@@ -20,7 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#009688"
+            android:background="@android:color/holo_blue_light"
             android:orientation="horizontal">
 
 
@@ -35,12 +35,11 @@
                 app:tint="#FFFFFF" />
 
             <TextView
-                android:id="@+id/nameAvatar"
+                android:id="@+id/title"
                 android:layout_width="249dp"
                 android:layout_height="match_parent"
                 android:layout_margin="0dp"
                 android:layout_weight="10"
-                android:background="#009688"
                 android:gravity="center_vertical"
                 android:padding="10sp"
                 android:text="Friend requests"
