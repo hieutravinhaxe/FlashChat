@@ -92,8 +92,16 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         listFriends.clear();
                         for(DataSnapshot snapshot1: snapshot.getChildren()) {
+<<<<<<< HEAD
                             String st = snapshot1.child("status").getValue().toString();
 
+=======
+                            String friend = snapshot.getValue().toString();
+                            int length = friend.length();
+                            String st = snapshot1.child("status").getValue().toString();
+                            //char status  = friend.charAt(length - 2);
+                            Log.d("chientran", String.valueOf(st));
+>>>>>>> 5f5edd7c6b4824184fb91571a12e4e18fb1300f4
                             final String userID = snapshot1.getKey();
                             if (st.equals("1")){
 
@@ -143,9 +151,20 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                         return true;
                     case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
+<<<<<<< HEAD
 //                        startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
 //                        overridePendingTransition(0,0);
 //                        finish();
+=======
+                        /*startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
+                        return true;*/
+                    case R.id.menuGroup:
+                        startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
+>>>>>>> 5f5edd7c6b4824184fb91571a12e4e18fb1300f4
                         return true;
                     case R.id.menuManager:
                         //Toast.makeText(getApplicationContext(), "manager", Toast.LENGTH_SHORT).show();

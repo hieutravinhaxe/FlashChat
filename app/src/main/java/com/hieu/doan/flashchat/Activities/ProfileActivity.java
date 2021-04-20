@@ -75,7 +75,8 @@ public class ProfileActivity extends AppCompatActivity {
                                         String imageUri = uri.toString();
 
                                         final String uId = auth.getUid();
-                                        String phone = auth.getCurrentUser().getPhoneNumber();
+                                        Intent t = getIntent();
+                                        String phone = t.getStringExtra("phoneNumber");
                                         String userName = name.getText().toString();
                                         String email = auth.getCurrentUser().getEmail();
 
