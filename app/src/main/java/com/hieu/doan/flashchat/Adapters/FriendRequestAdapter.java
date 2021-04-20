@@ -50,7 +50,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        final Friends friend = requests.get(position);
+        Friends friend = requests.get(position);
         holder.textView.setText(friend.getName());
         holder.imageView.setImageResource(R.drawable.profile);
 
@@ -72,11 +72,19 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                                 .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
+                                database.getReference().child("users").child(requests.get(position).getId())
+                                        .child("friends").child(auth.getUid())
+                                        .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        requests.remove(position);
+                                        notifyItemRemoved(position);
+                                    }
+                                });
                                 requests.remove(position);
                                 notifyItemRemoved(position);
                             }
                         });
-
 
                     }
                 });

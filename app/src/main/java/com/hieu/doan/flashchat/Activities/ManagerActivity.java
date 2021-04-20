@@ -77,7 +77,7 @@ public class ManagerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ManagerActivity.this, EditProfileActivity.class);
                 startActivity(intent);
-                finish();
+
             }
         });
 

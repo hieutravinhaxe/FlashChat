@@ -111,7 +111,7 @@
                 android:padding="5dp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/phonecall"
+                android:src="@drawable/mail"
                 app:tint="@android:color/holo_blue_light" />
 
             <TextView
@@ -119,20 +119,22 @@
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:gravity="center"
-                android:text="Phone"
+                android:text="Email"
                 android:textStyle="bold"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="16dp"/>
 
             <TextView
-                android:id="@+id/phone"
+                android:id="@+id/email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:gravity="center"
-                android:text="0909090909"
+                android:text="user@gmail.com"
                 android:layout_marginStart="30dp"/>
+
         </LinearLayout>
+
 
         <View
             android:layout_width="match_parent"
@@ -154,7 +156,7 @@
                 android:padding="5dp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/mail"
+                android:src="@drawable/phonecall"
                 app:tint="@android:color/holo_blue_light" />
 
             <TextView
@@ -162,18 +164,18 @@
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:gravity="center"
-                android:text="Email"
+                android:text="Phone"
                 android:textStyle="bold"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="16dp"/>
+                android:layout_marginEnd="10dp"/>
 
             <TextView
-                android:id="@+id/email"
+                android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:gravity="center"
-                android:text="user@gmail.com"
+                android:text="0909090909"
                 android:layout_marginStart="30dp"/>
         </LinearLayout>
 

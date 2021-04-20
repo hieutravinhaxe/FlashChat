@@ -92,18 +92,11 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         listFriends.clear();
                         for(DataSnapshot snapshot1: snapshot.getChildren()) {
-<<<<<<< HEAD
-                            String st = snapshot1.child("status").getValue().toString();
-
-=======
+                            String status = snapshot1.child("status").getValue().toString();
                             String friend = snapshot.getValue().toString();
-                            int length = friend.length();
-                            String st = snapshot1.child("status").getValue().toString();
-                            //char status  = friend.charAt(length - 2);
-                            Log.d("chientran", String.valueOf(st));
->>>>>>> 5f5edd7c6b4824184fb91571a12e4e18fb1300f4
+
                             final String userID = snapshot1.getKey();
-                            if (st.equals("1")){
+                            if (status.equals("1")){
 
                                 database.getReference().child("users").addValueEventListener(new ValueEventListener() {
                                     @Override
@@ -124,7 +117,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                                     }
                                 });
                             }
-                            else if(st.equals("0")){
+                            else if(status.equals("0")){
                                 requests.setColorFilter(ContextCompat.getColor(FriendsActivity.this,
                                         R.color.red));
                             }
@@ -151,11 +144,11 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                         return true;
                     case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
-<<<<<<< HEAD
+
 //                        startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
 //                        overridePendingTransition(0,0);
 //                        finish();
-=======
+
                         /*startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
                         overridePendingTransition(0,0);
                         finish();
@@ -164,7 +157,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                         startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
                         overridePendingTransition(0,0);
                         finish();
->>>>>>> 5f5edd7c6b4824184fb91571a12e4e18fb1300f4
+
                         return true;
                     case R.id.menuManager:
                         //Toast.makeText(getApplicationContext(), "manager", Toast.LENGTH_SHORT).show();
@@ -199,9 +192,9 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                             if(email.equals(u.getEmail())){
                                 database.getReference()
                                         .child("users")
-                                        .child(auth.getUid())
-                                        .child("friends")
                                         .child(u.getId())
+                                        .child("friends")
+                                        .child(auth.getUid())
                                         .child("status")
                                         .setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
