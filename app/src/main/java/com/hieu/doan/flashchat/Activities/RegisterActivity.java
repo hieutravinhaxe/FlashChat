@@ -77,7 +77,9 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
+                            Intent t = new Intent(RegisterActivity.this, ProfileActivity.class);
+                            t.putExtra("phoneNumber", phoneNumber.getText().toString());
+                            startActivity(t);
                             finish();
                             /*database.collection("Users")
                                     .document()

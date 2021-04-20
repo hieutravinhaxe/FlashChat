@@ -14,12 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Activities.GroupsActivity"></activity>
+        <activity android:name=".Activities.CreateGroupActivity"></activity>
+        <activity android:name=".Activities.GroupsActivity" />
         <activity android:name=".Activities.ForgotPassword" />
         <activity android:name=".Activities.GroupChatActivity" />
         <activity android:name=".Activities.ManagerActivity" />
         <activity android:name=".Activities.FriendsActivity" />
         <activity android:name=".Activities.ChatActivity" />
+        <activity android:name=".Activities.FriendRequestActivity" />
         <activity android:name=".Activities.ProfileActivity" />
         <activity android:name=".Activities.OTPActivity" />
         <activity android:name=".Activities.RegisterActivity" />

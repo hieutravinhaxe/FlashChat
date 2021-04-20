@@ -2,16 +2,21 @@ package com.hieu.doan.flashchat.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +30,9 @@ import com.hieu.doan.flashchat.R;
 
 import java.util.ArrayList;
 
-public class FriendsActivity extends AppCompatActivity {
+import static android.widget.Toast.LENGTH_LONG;
+
+public class FriendsActivity extends AppCompatActivity implements AddFriendDialog.AddfriendDialogListener {
     private BottomNavigationView bottomNavigationView;
     private RecyclerView recyclerView;
     private ArrayList<Friends> listFriends;
@@ -34,6 +41,7 @@ public class FriendsActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private ImageView add;
+    private ImageView requests;
 
 
     @Override
@@ -41,11 +49,14 @@ public class FriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
 
+
+
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.menuFriends);
         recyclerView = findViewById(R.id.recyclerView);
 
         add = findViewById(R.id.add);
+        requests = findViewById(R.id.requests);
 
         listFriends = new ArrayList<Friends>();
         users = new ArrayList<User>();
@@ -55,6 +66,21 @@ public class FriendsActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAddFriendDialog();
+            }
+        });
+
+        requests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendsActivity.this, FriendRequestActivity.class);
+                startActivity(intent);
+            }
+        });
 
         database.getReference()
                 .child("users")
@@ -79,11 +105,11 @@ public class FriendsActivity extends AppCompatActivity {
                                         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                                             User u = dataSnapshot.getValue(User.class);
                                             if (u.getId().equals(userID)) {
-                                                Friends f = new Friends(u.getName(), u.getImage());
+                                                Friends f = new Friends(u.getName(), u.getImage(), u.getId());
                                                 listFriends.add(f);
-                                                Log.d("chientran", u.getName());
                                             }
                                         }
+                                        adapter.notifyDataSetChanged();
                                     }
 
                                     @Override
@@ -91,6 +117,10 @@ public class FriendsActivity extends AppCompatActivity {
 
                                     }
                                 });
+                            }
+                            else if(st.equals("0")){
+                                requests.setColorFilter(ContextCompat.getColor(FriendsActivity.this,
+                                        R.color.red));
                             }
                         }
                     }
@@ -103,17 +133,7 @@ public class FriendsActivity extends AppCompatActivity {
 
 
 
-//        database.getReference()
-//                .child("users")
-//                .child(auth.getUid())
-//                .child("friends")
-//                .child(friend.getIdUser()).
-//                setValue(friend.getStatus()).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
 //
-//            }
-//        });
 //
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -147,6 +167,61 @@ public class FriendsActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void openAddFriendDialog() {
+        AddFriendDialog addFriendDialog = new AddFriendDialog();
+
+        addFriendDialog.show(getSupportFragmentManager(), "Add friend dialog");
+    }
+
+    @Override
+    public void applyText(final String email) {
+//        database.getReference()
+//                .child("users")
+//                .child(auth.getUid())
+//                .child("friends")
+//                .child(friend.getIdUser()).
+//                setValue(friend.getStatus()).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//
+//            }
+//        });
+
+        database.getReference()
+                .child("users")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot snapshot1: snapshot.getChildren()){
+                            User u = snapshot1.getValue(User.class);
+                            if(email.equals(u.getEmail())){
+                                database.getReference()
+                                        .child("users")
+                                        .child(auth.getUid())
+                                        .child("friends")
+                                        .child(u.getId())
+                                        .child("status")
+                                        .setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(FriendsActivity.this, "Has sent a friend request", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                            else {
+                                Toast.makeText(FriendsActivity.this, "Email does not exist", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
     }
 }
