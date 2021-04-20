@@ -57,7 +57,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         msgBox = findViewById(R.id.msgBoxGroup);
         sendBtn = findViewById(R.id.sendBtnGroup);
-        groupName = findViewById(R.id.nameAvatar);
+        groupName = findViewById(R.id.title);
         recyclerView = findViewById(R.id.recyclerViewGroup);
         sendImage = findViewById(R.id.imageSendGroup);
         imageGroup = findViewById(R.id.imageAvatar);

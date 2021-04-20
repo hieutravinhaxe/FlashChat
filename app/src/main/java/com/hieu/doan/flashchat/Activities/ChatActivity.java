@@ -3,7 +3,6 @@ package com.hieu.doan.flashchat.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,12 +10,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,7 +38,7 @@ import java.util.HashMap;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private ImageView imageView, sendBtn, sendImage, attachBtn;
+    private ImageView imageView, sendBtn, sendImage, attachBtn, btnback;
     private TextView textView;
     private EditText msgBox;
     private RecyclerView recyclerView;
@@ -59,7 +56,8 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         imageView = findViewById(R.id.imageAvatar);
-        textView  = findViewById(R.id.nameAvatar);
+        btnback = findViewById(R.id.btnBack);
+        textView  = findViewById(R.id.title);
         recyclerView = findViewById(R.id.recyclerView);
         sendBtn = findViewById(R.id.sendBtn);
         msgBox = findViewById(R.id.msgBox);
@@ -138,6 +136,15 @@ public class ChatActivity extends AppCompatActivity {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.setType("*/*");
                 startActivityForResult(intent,1212);
+            }
+        });
+
+        btnback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

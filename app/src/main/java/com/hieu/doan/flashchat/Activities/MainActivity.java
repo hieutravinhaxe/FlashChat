@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ListConverAdapter(this, listConver);
         recyclerView.setAdapter(adapter);
 
+
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

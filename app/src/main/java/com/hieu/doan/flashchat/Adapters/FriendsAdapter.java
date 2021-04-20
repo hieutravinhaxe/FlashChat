@@ -1,6 +1,7 @@
 package com.hieu.doan.flashchat.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hieu.doan.flashchat.Activities.ChatActivity;
 import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.R;
 
@@ -33,9 +35,20 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Friends friend = friends.get(position);
+        final Friends friend = friends.get(position);
         holder.textView.setText(friend.getName());
         holder.imageView.setImageResource(R.drawable.profile);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent t = new Intent(context, ChatActivity.class);
+                t.putExtra("name", friend.getName());
+                t.putExtra("uID", friend.getId());
+                t.putExtra("image", friend.getImage());
+                context.startActivity(t);
+            }
+        });
     }
 
     @Override
