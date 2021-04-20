@@ -179,41 +179,76 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
         addFriendDialog.show(getSupportFragmentManager(), "Add friend dialog");
     }
 
+    private boolean checkExistFriend(final String Email){
+        database.getReference()
+                .child("users")
+                .child(auth.getUid())
+                .child("friends").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int exist = 0;
+                for(DataSnapshot snapshot1: snapshot.getChildren()){
+                    Log.d("chientran", snapshot1.toString());
+                    if (snapshot1.getKey().equals(Email)) {
+                        exist = 1;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     @Override
     public void applyText(final String email) {
 
-        database.getReference()
-                .child("users")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot snapshot1: snapshot.getChildren()){
-                            User u = snapshot1.getValue(User.class);
-                            if(email.equals(u.getEmail())){
-                                database.getReference()
-                                        .child("users")
-                                        .child(u.getId())
-                                        .child("friends")
-                                        .child(auth.getUid())
-                                        .child("status")
-                                        .setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(FriendsActivity.this, "Has sent a friend request", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                            else {
-                                Toast.makeText(FriendsActivity.this, "Email does not exist", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
+        
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+        if(email.equals(auth.getCurrentUser().getEmail())){
+            Toast.makeText(this, "Vui lòng nhập email của người khác", Toast.LENGTH_SHORT).show();
+        } else {
 
-                    }
-                });
+        }
+
+
+
+//        database.getReference()
+//                .child("users")
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for(DataSnapshot snapshot1: snapshot.getChildren()){
+//                            User u = snapshot1.getValue(User.class);
+//
+//                            if(email.equals(u.getEmail())){
+//                                database.getReference()
+//                                        .child("users")
+//                                        .child(u.getId())
+//                                        .child("friends")
+//                                        .child(auth.getUid())
+//                                        .child("status")
+//                                        .setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        Toast.makeText(FriendsActivity.this, "Has sent a friend request", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                });
+//                            }
+//                            else {
+//                                Toast.makeText(FriendsActivity.this, "Email does not exist", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
 
     }
 }

@@ -202,7 +202,7 @@ public class EditProfileActivity extends AppCompatActivity {
             return false;
         }
         else if(TextUtils.isEmpty(name)){
-            Toast.makeText(this, "Không được để trống số mật khẩu", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không được để trống Tên", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

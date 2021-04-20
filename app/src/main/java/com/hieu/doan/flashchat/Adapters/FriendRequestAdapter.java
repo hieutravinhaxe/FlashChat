@@ -61,9 +61,9 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Reply to friend invitations");
-                builder.setMessage("Do you accept?");
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                builder.setTitle("Trả lời lời mời kết bạn");
+                builder.setMessage("bạn có chấp nhận lời mời kết bạn?");
+                builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -89,7 +89,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                     }
                 });
 
-                builder.setNegativeButton("Cancle",new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Hủy",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 

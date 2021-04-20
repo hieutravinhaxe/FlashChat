@@ -99,6 +99,16 @@
             android:background="#1DE8D5"
             android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="22dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="21dp"
+                android:paddingBottom="17dp"
+                app:srcCompat="@drawable/back"
+                app:tint="#FFFFFF" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageAvatar"
                 android:layout_width="17dp"
