@@ -1,6 +1,8 @@
 package com.hieu.doan.flashchat.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hieu.doan.flashchat.Activities.ChatActivity;
+import com.hieu.doan.flashchat.Activities.DeleteMessage;
+import com.hieu.doan.flashchat.Activities.GroupsActivity;
+import com.hieu.doan.flashchat.Activities.ListMemberActivity;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
 
@@ -43,10 +49,10 @@ public class ListConverAdapter extends RecyclerView.Adapter<ListConverAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final User user = users.get(position);
         String senderId = FirebaseAuth.getInstance().getUid();
-        String sendRoom = senderId + user.getId();
+        final String sendRoom = senderId + user.getId();
 
         FirebaseDatabase.getInstance().getReference()
                 .child("chats")
@@ -95,6 +101,35 @@ public class ListConverAdapter extends RecyclerView.Adapter<ListConverAdapter.Vi
                 t.putExtra("uID", user.getId());
                 t.putExtra("image", user.getImage());
                 context.startActivity(t);
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Xác nhận");
+                builder.setMessage("Bạn có muốn xóa tin nhắn không?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //Toast.makeText(MainActivity.this, "Không thoát được", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        DeleteMessage deleteMessage = new DeleteMessage(sendRoom);
+                        deleteMessage.exeDelete();
+                        users.remove(user);
+                        notifyItemRemoved(position);
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return false;
             }
         });
     }
