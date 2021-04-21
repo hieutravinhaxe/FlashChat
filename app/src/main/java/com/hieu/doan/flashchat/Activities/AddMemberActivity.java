@@ -79,7 +79,7 @@ public class AddMemberActivity extends AppCompatActivity {
                                         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                                             User u = dataSnapshot.getValue(User.class);
                                             if (u.getId().equals(userID)) {
-                                                final Friends f = new Friends(u.getName(), u.getImage(), u.getId());
+                                                final Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());
                                                 //kiểm tra tiếp có trong nhóm chưa.
                                                 FirebaseDatabase.getInstance().getReference()
                                                         .child("groups")
