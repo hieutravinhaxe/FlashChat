@@ -112,6 +112,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                                         database.getReference().child("groups")
                                                 .child(groupId)
                                                 .child("members")
+                                                .push()
                                                 .setValue(auth.getUid())
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override

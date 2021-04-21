@@ -175,7 +175,7 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent t = new Intent(getApplicationContext(), ListMemberActivity.class);
-                t.putExtra("groupName", groupName.toString());
+                t.putExtra("groupName", groupName.getText().toString());
                 t.putExtra("groupImage", imageUri);
                 t.putExtra("groupID", groupID);
                 startActivity(t);
@@ -186,7 +186,7 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
-                intent.putExtra("groupName", groupName.toString());
+                intent.putExtra("groupName", groupName.getText().toString());
                 intent.putExtra("groupImage", imageUri);
                 intent.putExtra("groupID", groupID);
                 startActivity(intent);

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -89,9 +90,29 @@ public class GroupsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
-                    Group g = snapshot1.getValue(Group.class);
+                    final Group g = snapshot1.getValue(Group.class);
+                    //check user is a most of group's members
+                    database.getReference()
+                            .child("groups")
+                            .child(g.getId())
+                            .child("members")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot17) {
+                                    for(DataSnapshot snapshot12: snapshot17.getChildren()){
+                                        String memberId = snapshot12.getValue().toString();
+                                        if(memberId.equals(FirebaseAuth.getInstance().getUid())){
+                                            groups.add(g);
+                                        }
+                                    }
+                                    adapter.notifyDataSetChanged();
+                                }
 
-                    groups.add(g);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                 }
                 adapter.notifyDataSetChanged();
             }
