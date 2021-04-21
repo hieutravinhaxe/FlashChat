@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Activities.AddMemberActivity"></activity>
+        <activity android:name=".Activities.AddMemberActivity" />
         <activity android:name=".Activities.ListMemberActivity" />
         <activity android:name=".Activities.CreateGroupActivity" />
         <activity android:name=".Activities.GroupsActivity" />
@@ -27,7 +27,7 @@
         <activity android:name=".Activities.ProfileActivity" />
         <activity android:name=".Activities.OTPActivity" />
         <activity android:name=".Activities.RegisterActivity" />
-        <activity android:name=".Activities.ChangePasswordActivity"/>
+        <activity android:name=".Activities.ChangePasswordActivity" />
         <activity android:name=".Activities.EditProfileActivity" />
         <activity android:name=".Activities.LoginActivity">
             <intent-filter>

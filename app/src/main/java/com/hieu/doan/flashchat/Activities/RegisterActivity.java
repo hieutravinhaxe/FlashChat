@@ -36,7 +36,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         phoneNumber = findViewById(R.id.phoneEditText);
         pwd = findViewById(R.id.pwdEditText);
         rePwd = findViewById(R.id.rePwdEditText);
@@ -57,66 +56,33 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validation()){
-                    /*Intent i = new Intent(RegisterActivity.this, OTPActivity.class);
+                if (validation()) {
+                    Intent i = new Intent(RegisterActivity.this, OTPActivity.class);
                     i.putExtra("phoneNum", phoneNumber.getText().toString());
+                    i.putExtra("email", email.getText().toString());
                     i.putExtra("password", pwd.getText().toString());
-                    startActivity(i);*/
-                    register();
+                    startActivity(i);
+//                    register();
                 }
             }
         });
     }
-    private  void register(){
-        //final User u = new User(fname.getText().toString(), email.getText().toString(), phoneNumber.getText().toString(), pwd.getText().toString());
 
-        String emailText = email.getText().toString();
-        String password  = pwd.getText().toString();
-        fAuth.createUserWithEmailAndPassword(emailText, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Intent t = new Intent(RegisterActivity.this, ProfileActivity.class);
-                            t.putExtra("phoneNumber", phoneNumber.getText().toString());
-                            startActivity(t);
-                            finish();
-                            /*database.collection("Users")
-                                    .document()
-                                    .set(u).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                }
-                            });*/
-                            Toast.makeText(getApplicationContext(), "Successfull", Toast.LENGTH_SHORT).show();
 
-                        }else{
-                            if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                                Toast.makeText(getApplicationContext(), "Email đã tồn tại", Toast.LENGTH_LONG).show();
-                            }
-                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
     private boolean validation() {
         String phone = phoneNumber.getText().toString().trim();
         String password = pwd.getText().toString().trim();
         String rePassword = rePwd.getText().toString().trim();
-        if(TextUtils.isEmpty(phone)){
+        if (TextUtils.isEmpty(phone)) {
             Toast.makeText(this, "Không được để trống số điện thoại", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(TextUtils.isEmpty(password)){
+        } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Không được để trống số mật khẩu", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(password.length() < 6){
+        } else if (password.length() < 6) {
             Toast.makeText(this, "Mật khẩu không được ngắn hơn 6 kí tự", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(!rePassword.equals(password)){
+        } else if (!rePassword.equals(password)) {
             Toast.makeText(this, "Mật khẩu xác thực không trùng khớp", Toast.LENGTH_SHORT).show();
             return false;
         }
