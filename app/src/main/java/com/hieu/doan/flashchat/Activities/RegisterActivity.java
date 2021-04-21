@@ -76,6 +76,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(phone)) {
             Toast.makeText(this, "Không được để trống số điện thoại", Toast.LENGTH_SHORT).show();
             return false;
+        } else if (phone.length() != 10&&phone.length() != 12) {
+            Toast.makeText(this, "Số điện thoại không đúng định dạng!", Toast.LENGTH_SHORT).show();
+            return false;
         } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Không được để trống số mật khẩu", Toast.LENGTH_SHORT).show();
             return false;

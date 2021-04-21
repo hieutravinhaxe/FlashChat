@@ -59,6 +59,10 @@ public class OTPActivity extends AppCompatActivity {
         StartFirebaseLogin();
         try {
             phoneNumber = getIntent().getStringExtra("phoneNum");
+            if (phoneNumber.substring(0,1).contains("0")){
+                phoneNumber="+84"+phoneNumber.substring(1,phoneNumber.length());
+                Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show();
+            }
             email = getIntent().getStringExtra("email");
             pass = getIntent().getStringExtra("password");
         }
@@ -70,7 +74,6 @@ public class OTPActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    Toast.makeText(OTPActivity.this, phoneNumber, Toast.LENGTH_SHORT).show();
                     // [START start_phone_auth]
                     PhoneAuthOptions options =
                             PhoneAuthOptions.newBuilder(auth)
