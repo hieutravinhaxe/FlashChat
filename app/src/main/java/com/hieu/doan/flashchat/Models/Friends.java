@@ -6,6 +6,7 @@ public class Friends {
     String id;
     String name;
     String image;
+    String email;
 
     public Friends() {
     }
@@ -26,15 +27,19 @@ public class Friends {
         return id;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setImage(String image) {
         this.image = image;
     }
 
-    public Friends(String name, String image, String id) {
+    public Friends(String name, String image, String id,String email) {
         this.name = name;
         this.image = image;
         this.id = id;
+        this.email = email;
     }
-
 
 }

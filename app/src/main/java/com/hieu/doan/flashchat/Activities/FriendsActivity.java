@@ -42,7 +42,6 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
     private FirebaseAuth auth;
     private ImageView add;
     private ImageView requests;
-    int exist =0;
 
 
     @Override
@@ -91,7 +90,6 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        listFriends.clear();
                         for(DataSnapshot snapshot1: snapshot.getChildren()) {
                             String status = snapshot1.child("status").getValue().toString();
                             String friend = snapshot.getValue().toString();
@@ -102,10 +100,11 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                                 database.getReference().child("users").addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        listFriends.clear();
                                         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                                             User u = dataSnapshot.getValue(User.class);
                                             if (u.getId().equals(userID)) {
-                                                Friends f = new Friends(u.getName(), u.getImage(), u.getId());
+                                                Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());
                                                 listFriends.add(f);
                                             }
                                         }
@@ -180,80 +179,85 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
         addFriendDialog.show(getSupportFragmentManager(), "Add friend dialog");
     }
 
-    private boolean checkExistFriend(final String Email){
-        database.getReference()
-                .child("users")
-                .child(auth.getUid())
-                .child("friends").addValueEventListener(new ValueEventListener() {
+
+    private boolean CheckExistFriend(String email) {
+        for (int i = 0; i < listFriends.size(); i++) {
+            if (email.equals(listFriends.get(i).getEmail())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkExistEmail(String email){
+
+        database.getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                users.clear();
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
-                    Log.d("chientran", snapshot1.toString());
-                    if (snapshot1.getKey().equals(Email)) {
-                        exist = 1;
-                    }
+                    User u = snapshot1.getValue(User.class);
+                    users.add(u);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-        if(exist==0){
-            return false;
+
+        for (int i = 0; i < users.size(); i++){
+            if(email.equals(users.get(i).getEmail())){
+                return true;
+            }
         }
-        else{
-            return true;
-        }
+
+        return false;
     }
+
+
 
     @Override
     public void applyText(final String email) {
 
-        
-
         if(email.equals(auth.getCurrentUser().getEmail())){
             Toast.makeText(this, "Vui lòng nhập email của người khác", Toast.LENGTH_SHORT).show();
+        } else if (CheckExistFriend(email)){
+            Toast.makeText(this, "Người này đã trở thành bạn bè", Toast.LENGTH_SHORT).show();
+        } else if(!checkExistEmail(email)) {
+            Toast.makeText(this, "Email không tồn tại", Toast.LENGTH_SHORT).show();
         } else {
+            database.getReference()
+                .child("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot snapshot1: snapshot.getChildren()){
+                            User u = snapshot1.getValue(User.class);
 
+                            if(email.equals(u.getEmail())){
+                                database.getReference()
+                                        .child("users")
+                                        .child(u.getId())
+                                        .child("friends")
+                                        .child(auth.getUid())
+                                        .child("status")
+                                        .setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(FriendsActivity.this, "Đã gửi lời mời kết bạn", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
         }
-
-
-
-//        database.getReference()
-//                .child("users")
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        for(DataSnapshot snapshot1: snapshot.getChildren()){
-//                            User u = snapshot1.getValue(User.class);
-//
-//                            if(email.equals(u.getEmail())){
-//                                database.getReference()
-//                                        .child("users")
-//                                        .child(u.getId())
-//                                        .child("friends")
-//                                        .child(auth.getUid())
-//                                        .child("status")
-//                                        .setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        Toast.makeText(FriendsActivity.this, "Has sent a friend request", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                });
-//                            }
-//                            else {
-//                                Toast.makeText(FriendsActivity.this, "Email does not exist", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
 
     }
 }

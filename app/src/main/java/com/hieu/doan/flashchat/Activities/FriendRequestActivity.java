@@ -80,7 +80,7 @@ public class FriendRequestActivity extends AppCompatActivity {
                                         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
                                             User u = dataSnapshot.getValue(User.class);
                                             if (u.getId().equals(userID)) {
-                                                Friends f = new Friends(u.getName(), u.getImage(), u.getId());
+                                                Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());
                                                 friendRequests.add(f);
                                             }
                                         }
