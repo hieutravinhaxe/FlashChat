@@ -160,7 +160,6 @@ public class OTPActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
-                            showDialog.show("Đăng nhập thành công!");
                             FirebaseUser user = task.getResult().getUser();
                             register();
                         } else {
@@ -188,10 +187,10 @@ public class OTPActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            showDialog.show("Đăng nhập thành công!");
                             Intent t = new Intent(OTPActivity.this, ProfileActivity.class);
                             t.putExtra("phoneNumber", phoneNumber);
                             startActivity(t);
-                            finish();
                             /*database.collection("Users")
                                     .document()
                                     .set(u).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -200,13 +199,13 @@ public class OTPActivity extends AppCompatActivity {
                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                 }
                             });*/
-                            Toast.makeText(getApplicationContext(), "Successfull", Toast.LENGTH_SHORT).show();
-
                         } else {
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                Toast.makeText(getApplicationContext(), "Email đã tồn tại", Toast.LENGTH_LONG).show();
+                                showDialog.show("Email đã tồn tại");
                             }
-                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
+                            showDialog.show("Email đã tồn tại");
+//
+//                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
