@@ -2,21 +2,35 @@ package com.hieu.doan.flashchat.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.hieu.doan.flashchat.Adapters.GroupsAdapter;
+import com.hieu.doan.flashchat.Models.Group;
 import com.hieu.doan.flashchat.R;
+
+import java.util.ArrayList;
 
 
 public class GroupsActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton floatingActionButton;
+    private RecyclerView recyclerView;
+    private GroupsAdapter adapter;
+    private ArrayList<Group> groups;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +39,11 @@ public class GroupsActivity extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.floatingBtnAdd);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.menuGroup);
+        recyclerView = findViewById(R.id.recyclerView);
+
+        groups = new ArrayList<Group>();
+        adapter = new GroupsAdapter(this, groups);
+        recyclerView.setAdapter(adapter);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +82,23 @@ public class GroupsActivity extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        database.getReference().child("groups").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snapshot1: snapshot.getChildren()){
+                    Group g = snapshot1.getValue(Group.class);
+
+                    groups.add(g);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

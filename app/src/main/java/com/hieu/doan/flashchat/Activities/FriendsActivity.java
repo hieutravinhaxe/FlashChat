@@ -42,6 +42,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
     private FirebaseAuth auth;
     private ImageView add;
     private ImageView requests;
+    int exist =0;
 
 
     @Override
@@ -194,10 +195,18 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
         database.getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+<<<<<<< HEAD
                 users.clear();
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
                     User u = snapshot1.getValue(User.class);
                     users.add(u);
+=======
+                for(DataSnapshot snapshot1: snapshot.getChildren()){
+                    Log.d("chientran", snapshot1.toString());
+                    if (snapshot1.getKey().equals(Email)) {
+                        exist = 1;
+                    }
+>>>>>>> 23342a3f571c8c077400b7fe8ca7d745c0bb21c2
                 }
             }
             @Override
@@ -205,6 +214,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
 
             }
         });
+<<<<<<< HEAD
 
         for (int i = 0; i < users.size(); i++){
             if(email.equals(users.get(i).getEmail())){
@@ -213,6 +223,14 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
         }
 
         return false;
+=======
+        if(exist==0){
+            return false;
+        }
+        else{
+            return true;
+        }
+>>>>>>> 23342a3f571c8c077400b7fe8ca7d745c0bb21c2
     }
 
 
