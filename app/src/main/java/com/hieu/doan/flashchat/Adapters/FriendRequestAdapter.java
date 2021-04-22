@@ -69,27 +69,37 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
                         database.getReference().child("users").child(auth.getUid())
                                 .child("friends").child(requests.get(position).getId())
-                                .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                database.getReference().child("users").child(requests.get(position).getId())
-                                        .child("friends").child(auth.getUid())
-                                        .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                .child("status").setValue(1);
+                        database.getReference().child("users").child(requests.get(position).getId())
+                                .child("friends").child(auth.getUid())
+                                .child("status").setValue(1);
+
+
+                        requests.remove(position);
+                        notifyItemRemoved(position);
+
+
+                    }
+                });
+
+                builder.setNegativeButton("Xóa", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        database.getReference().child("users").child(auth.getUid()).
+                                child("friends").child(requests.get(position).getId()).removeValue()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         requests.remove(position);
                                         notifyItemRemoved(position);
                                     }
                                 });
-                                requests.remove(position);
-                                notifyItemRemoved(position);
-                            }
-                        });
 
+                        Toast.makeText(context, "Đã xóa yêu cầu kết bạn", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                builder.setNegativeButton("Hủy",new DialogInterface.OnClickListener() {
+                builder.setNeutralButton("Hủy",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
