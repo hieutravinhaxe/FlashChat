@@ -59,12 +59,24 @@
                 android:padding="10dp" />
 
             <Button
+                android:id="@+id/btnGenOtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@android:color/holo_green_light"
+                android:text="GỬI MÃ OTP"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <Button
                 android:id="@+id/btnRegis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:background="@android:color/holo_green_light"
-                android:text="XÁC NHẬN" />
+                android:text="XÁC NHẬN"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

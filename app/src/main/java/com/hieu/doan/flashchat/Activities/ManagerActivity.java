@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hieu.doan.flashchat.Models.Group;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
 
@@ -135,6 +136,12 @@ public class ManagerActivity extends AppCompatActivity {
                     case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
+                        return true;
+                    case R.id.menuGroup:
+                        //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
                         overridePendingTransition(0,0);
                         finish();
                         return true;

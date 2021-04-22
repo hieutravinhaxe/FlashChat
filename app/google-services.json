@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1050289129456-d3537pdh8nrfo30t6m9lqkf6qh5e4s0t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hieu.doan.flashchat",
+            "certificate_hash": "092447a63ea8917e1ae27872574abdfa2cfd64c6"
+          }
+        },
+        {
+          "client_id": "1050289129456-lhnagmc1qnejqnobh9sfemfd9lm8d329.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hieu.doan.flashchat",
+            "certificate_hash": "390845886906d080738ef6bf1003bcaed0d45f43"
+          }
+        },
+        {
           "client_id": "1050289129456-gf6baqs1aamd0e91at73f4k0u64l8651.apps.googleusercontent.com",
           "client_type": 3
         }
