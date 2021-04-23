@@ -33,10 +33,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:padding="10sp"
-                android:text="List Friends"
                 android:textColor="#F8F6F6"
-                android:textSize="25dp"
-                 />
+                android:textSize="25dp" />
 
             <ImageView
                 android:id="@+id/add"

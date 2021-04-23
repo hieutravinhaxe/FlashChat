@@ -34,7 +34,6 @@
                 android:gravity="center_vertical"
                 android:padding="10sp"
                 android:paddingStart="20dp"
-                android:text="Profile"
                 android:textColor="#F8F6F6"
                 android:textSize="25dp" />
 
@@ -45,7 +44,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="17dp"
-                app:srcCompat="@drawable/exit"
+                app:srcCompat="@drawable/logout"
                 app:tint="#FFFFFF" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -191,27 +190,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_marginTop="50dp">
 
             <Button
                 android:id="@+id/btnEdit"
-                android:layout_width="wrap_content"
+                android:layout_width="165dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_background"
                 android:text="edit"
-                android:layout_marginStart="60dp"
-                android:textColor="@color/white"
-                android:background="@android:color/holo_blue_light"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/btnChangePwd"
-                android:layout_marginStart="45dp"
                 android:layout_width="wrap_content"
-                android:text="Change password"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_background"
                 android:padding="15dp"
-                android:textColor="@color/white"
-                android:background="@android:color/holo_blue_light"
-                android:layout_height="wrap_content"/>
+                android:text="Change password"
+                android:textColor="@color/black" />
 
         </LinearLayout>
     </LinearLayout>
