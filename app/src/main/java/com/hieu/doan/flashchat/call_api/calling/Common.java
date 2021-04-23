@@ -1,4 +1,4 @@
-package com.hieu.doan.flashchat.Activities.calling;
+package com.hieu.doan.flashchat.call_api.calling;
 
 import android.media.Ringtone;
 

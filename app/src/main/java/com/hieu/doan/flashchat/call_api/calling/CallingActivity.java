@@ -1,6 +1,7 @@
-package com.hieu.doan.flashchat.Activities.calling;
+package com.hieu.doan.flashchat.call_api.calling;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,14 +10,17 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.hieu.doan.flashchat.Activities.ChatActivity;
 import com.hieu.doan.flashchat.Activities.MainActivity;
 import com.hieu.doan.flashchat.R;
 import com.stringee.call.StringeeCall;
+import com.stringee.common.StringeeConstant;
 import com.stringee.listener.StatusListener;
 
 import org.json.JSONObject;
@@ -131,8 +135,9 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        endCall();
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
     }
 
     @Override
@@ -153,6 +158,7 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
             if (!isGranted) {
                 finish();
             } else {
+                Toast.makeText(this, "Đang gọi", Toast.LENGTH_SHORT).show();
                 makeCall();
             }
         }
@@ -172,15 +178,15 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
                         mSignalingState = signalingState;
                         switch (signalingState) {
                             case CALLING:
-                                tvState.setText("Outgoing call");
+                                tvState.setText("Đang kết nối...");
                                 break;
                             case RINGING:
-                                tvState.setText("Ringing");
+                                tvState.setText("Đang đổ chuông...");
                                 break;
                             case ANSWERED:
-                                tvState.setText("Starting");
+                                tvState.setText("Đã kết nối");
                                 if (mMediaState == StringeeCall.MediaState.CONNECTED) {
-                                    tvState.setText("Started");
+                                    tvState.setText("Đã kết nối");
                                     Common.audioManager.setSpeakerphoneOn(isVideoCall);
                                 }
                                 break;
@@ -218,7 +224,9 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
                         mMediaState = mediaState;
                         if (mediaState == StringeeCall.MediaState.CONNECTED) {
                             if (mSignalingState == StringeeCall.SignalingState.ANSWERED) {
-                                tvState.setText("Started");
+//                                tvState.setText("Started");
+                                tvState.setVisibility(View.GONE);
+                                tvTo.setVisibility(View.GONE);
                             }
                         }
                     }
@@ -286,6 +294,7 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
                 btnVideo.setImageResource(isVideo ? R.drawable.btn_video : R.drawable.btn_video_off);
                 if (mStringeeCall != null) {
                     mStringeeCall.enableVideo(isVideo);
+                    mStringeeCall.setQuality(StringeeConstant.QUALITY_FULLHD);
                 }
                 break;
             case R.id.btn_switch:
@@ -308,7 +317,7 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         mStringeeCall.hangup();
-       Utils.postDelay(new Runnable() {
+        Utils.postDelay(new Runnable() {
             @Override
             public void run() {
                 Common.isInCall = false;

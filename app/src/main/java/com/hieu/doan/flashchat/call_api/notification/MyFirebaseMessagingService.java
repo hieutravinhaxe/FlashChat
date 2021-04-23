@@ -1,4 +1,4 @@
-package com.hieu.doan.flashchat.Activities.notification;
+package com.hieu.doan.flashchat.call_api.notification;
 
 import android.app.NotificationManager;
 import android.util.Log;
@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.hieu.doan.flashchat.Activities.calling.Common;
+import com.hieu.doan.flashchat.call_api.calling.Common;
 import com.hieu.doan.flashchat.Activities.MainActivity;
 import com.stringee.listener.StatusListener;
 

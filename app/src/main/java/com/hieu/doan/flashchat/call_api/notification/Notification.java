@@ -1,4 +1,4 @@
-package com.hieu.doan.flashchat.Activities.notification;
+package com.hieu.doan.flashchat.call_api.notification;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,9 +12,9 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
 import com.hieu.doan.flashchat.Activities.MainActivity;
-import com.hieu.doan.flashchat.Activities.calling.Common;
-import com.hieu.doan.flashchat.Activities.calling.StringeeAudioManager;
-import com.hieu.doan.flashchat.Activities.calling.Utils;
+import com.hieu.doan.flashchat.call_api.calling.Common;
+import com.hieu.doan.flashchat.call_api.calling.StringeeAudioManager;
+import com.hieu.doan.flashchat.call_api.calling.Utils;
 import com.hieu.doan.flashchat.R;
 
 import java.util.Set;

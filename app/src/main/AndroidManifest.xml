@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Activities.calling.CallingActivity"></activity>
+        <activity android:name=".call_api.calling.IncomingCallActivity"/>
+        <activity android:name=".call_api.calling.CallingActivity"></activity>
         <activity android:name=".Activities.AddMemberActivity" />
         <activity android:name=".Activities.ListMemberActivity" />
         <activity android:name=".Activities.CreateGroupActivity" />

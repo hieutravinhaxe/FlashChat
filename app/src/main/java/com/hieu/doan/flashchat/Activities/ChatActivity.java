@@ -27,17 +27,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.hieu.doan.flashchat.Activities.calling.CallingActivity;
-import com.hieu.doan.flashchat.Activities.calling.Utils;
+import com.hieu.doan.flashchat.call_api.calling.CallingActivity;
+import com.hieu.doan.flashchat.call_api.calling.Utils;
 import com.hieu.doan.flashchat.Adapters.MessagesAdapter;
 import com.hieu.doan.flashchat.Models.Message;
 import com.hieu.doan.flashchat.R;
 import com.stringee.StringeeClient;
-import com.stringee.call.StringeeCall;
-import com.stringee.exception.StringeeError;
-import com.stringee.listener.StringeeConnectionListener;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,14 +49,14 @@ public class ChatActivity extends AppCompatActivity {
     ProgressDialog dialog, dialog1;
     FirebaseDatabase database;
     FirebaseStorage storage;
-
+    Boolean isCalling = false;
     String sendRoom, receiveRoom, sendID, receiveID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
+        isCalling = false;
 
         imageView = findViewById(R.id.imageAvatar);
         btnback = findViewById(R.id.btnBack);
@@ -121,11 +116,16 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         textView.setText(name);
-        if (image.equals("undefined")) {
-            imageView.setImageResource(R.drawable.profile);
-        } else {
-            Glide.with(this).load(image).into(imageView);
-        }
+       try {
+           if (image.equals("undefined")) {
+               imageView.setImageResource(R.drawable.profile);
+           } else {
+               Glide.with(this).load(image).into(imageView);
+           }
+       }
+       catch (Exception e){
+
+       }
 
         sendImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,15 +203,19 @@ public class ChatActivity extends AppCompatActivity {
         callVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             StringeeClient client = MainActivity.client;
-                if (client.isConnected()) {
-                    Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
-                    intent.putExtra("from", sendID);
-                    intent.putExtra("to", receiveID);
-                    intent.putExtra("is_video_call", false);
-                    startActivity(intent);
+                if (isCalling) {
+                    onBackPressed();
                 } else {
-                    Utils.reportMessage(ChatActivity.this, "Stringee session not connected");
+                    StringeeClient client = MainActivity.client;
+                    if (client.isConnected()) {
+                        Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
+                        intent.putExtra("from", "subi2");
+                        intent.putExtra("to", "subi1");
+                        intent.putExtra("is_video_call", true);
+                        startActivity(intent);
+                    } else {
+                        Utils.reportMessage(ChatActivity.this, "Stringee session not connected");
+                    }
                 }
             }
         });
@@ -347,6 +351,10 @@ public class ChatActivity extends AppCompatActivity {
                     });
                 }
             }
+        }
+
+        if (requestCode == 999) {
+            isCalling = true;
         }
         recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         msgBox.setText("");

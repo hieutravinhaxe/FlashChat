@@ -1,16 +1,20 @@
 package com.hieu.doan.flashchat.Activities;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -27,9 +31,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.hieu.doan.flashchat.Activities.calling.CallingActivity;
-import com.hieu.doan.flashchat.Activities.calling.Common;
-import com.hieu.doan.flashchat.Activities.calling.Utils;
+import com.hieu.doan.flashchat.call_api.calling.CallingActivity;
+import com.hieu.doan.flashchat.call_api.calling.Common;
+import com.hieu.doan.flashchat.call_api.calling.IncomingCallActivity;
+import com.hieu.doan.flashchat.call_api.calling.Utils;
 import com.hieu.doan.flashchat.Adapters.ListConverAdapter;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
@@ -67,19 +72,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //For calling
-    String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0p4T2hYSzVTYXZ2OFp1eDJ4dFB2SWtDblZCb0FpNEUzLTE2MTkxNTA3ODMiLCJpc3MiOiJTS0p4T2hYSzVTYXZ2OFp1eDJ4dFB2SWtDblZCb0FpNEUzIiwiZXhwIjoxNjIxNzQyNzgzLCJ1c2VySWQiOiJwaG9uZ3N1YmkifQ.7ByPGD9nwptSgkmlihMmjEqIq_jdjEOvxHAcsM5S0L0";
+    String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0p4T2hYSzVTYXZ2OFp1eDJ4dFB2SWtDblZCb0FpNEUzLTE2MTkyMDI5NTciLCJpc3MiOiJTS0p4T2hYSzVTYXZ2OFp1eDJ4dFB2SWtDblZCb0FpNEUzIiwiZXhwIjoxNjIxNzk0OTU3LCJ1c2VySWQiOiJzdWJpMiIsImljY19hcGkiOnRydWV9.T8uNx_73362tUusQ-qcwkNvzPRe9gjt5mPHIZnC20co";
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private final String PREF_NAME = "com.hieu.doan.flashchat";
     private final String IS_TOKEN_REGISTERED = "is_token_registered";
     private final String TOKEN = "token";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         auth = FirebaseAuth.getInstance();
-
         setupNotification();
         recyclerView = findViewById(R.id.recyclerView);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -215,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Utils.reportMessage(MainActivity.this, "PLASH CHAT is connected.");
+//                        Utils.reportMessage(MainActivity.this, "PLASH CHAT is connected.");
                     }
                 });
             }
@@ -225,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Utils.reportMessage(MainActivity.this, "StringeeClient disconnected.");
+//                        Utils.reportMessage(MainActivity.this, "Bị mất kết nối");
                     }
                 });
             }
@@ -239,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             stringeeCall.hangup();
                         } else {
                             Common.callsMap.put(stringeeCall.getCallId(), stringeeCall);
-                            Intent intent = new Intent(MainActivity.this, CallingActivity.class);
+                            Intent intent = new Intent(MainActivity.this, IncomingCallActivity.class);
                             intent.putExtra("call_id", stringeeCall.getCallId());
                             startActivity(intent);
                         }
@@ -282,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setupNotification() {
-        onAppBackgrounded();
+        requiredPermissions();
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -294,5 +299,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         initAndConnectStringee();
+    }
+
+    private void requiredPermissions() {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+        }, 1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                Toast.makeText(this, "Vui lòng cấp quyền để thực hiện Video Call!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
