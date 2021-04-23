@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        init();
         showDialog = new ShowDialog(this);
         email = findViewById(R.id.emailEditText);
         pwd = findViewById(R.id.pwdEditText);
@@ -40,21 +40,10 @@ public class LoginActivity extends AppCompatActivity {
         login = findViewById(R.id.btnLogin);
         resetPwd = findViewById(R.id.resetPwd);
         fAuth = FirebaseAuth.getInstance();
-
+        autoLogin();
         dialog = new ProgressDialog(this);
         dialog.setMessage("Wait just moment");
         dialog.setCancelable(false);
-
-//        try {
-//            Intent i = getIntent();
-//            String text = i.getStringExtra("key");
-//            email.setText(text.split(">>>")[0]);
-//            pwd.setText(text.split(">>>")[1]);
-//            showDialog.show("Vui lòng xác nhận mail trước khi đăng nhập!");
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         resetPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,9 +82,17 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-//    private void checkEmail(String email) {
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        boolean emailVerified = user.isEmailVerified();
-//
-//    }
+    private void autoLogin() {
+            if (fAuth.getCurrentUser() != null) {
+                // User is signed in (getCurrentUser() will be null if not signed in)
+                Intent intent =new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                // or do some other stuff that you want to do
+            }
+    }
+
+    private void init() {
+
+    }
 }

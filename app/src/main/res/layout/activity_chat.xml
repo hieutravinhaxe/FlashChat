@@ -128,12 +128,12 @@
                 android:textSize="20dp" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/callVideo"
                 android:layout_width="34dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="15dp"
-                app:srcCompat="@drawable/phonecall"
+                app:srcCompat="@drawable/ic_baseline_videocam_24"
                 app:tint="@color/cardview_light_background" />
 
         </LinearLayout>
