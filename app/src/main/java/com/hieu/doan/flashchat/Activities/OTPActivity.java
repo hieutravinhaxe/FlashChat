@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
@@ -37,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class OTPActivity extends AppCompatActivity {
 
     Button btnGenerateOTP, btnSignIn;
+    TextView backRegis;
     EditText etPhoneNumber, etOTP;
     String phoneNumber, otp, email, pass;
     FirebaseAuth auth;
@@ -55,13 +57,14 @@ public class OTPActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_o_t_p);
+
         findViews();
         StartFirebaseLogin();
         try {
             phoneNumber = getIntent().getStringExtra("phoneNum");
             if (phoneNumber.substring(0,1).contains("0")){
                 phoneNumber="+84"+phoneNumber.substring(1,phoneNumber.length());
-                Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show();
             }
             email = getIntent().getStringExtra("email");
             pass = getIntent().getStringExtra("password");
@@ -99,6 +102,14 @@ public class OTPActivity extends AppCompatActivity {
                 signInWithPhoneAuthCredential(credential);
             }
         });
+
+        backRegis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),RegisterActivity.class));
+                finish();
+            }
+        });
     }
 
 
@@ -107,6 +118,7 @@ public class OTPActivity extends AppCompatActivity {
         btnSignIn = findViewById(R.id.btnRegis);
         etOTP = findViewById(R.id.OTPNumber);
         btnGenerateOTP = findViewById(R.id.btnGenOtp);
+        backRegis = findViewById(R.id.backRegis);
         showDialog  = new ShowDialog(this);
     }
 
@@ -189,7 +201,7 @@ public class OTPActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             showDialog.show("Đăng nhập thành công!");
                             Intent t = new Intent(OTPActivity.this, ProfileActivity.class);
-                            t.putExtra("phoneNumber", phoneNumber);
+                            t.putExtra("phoneNumber", getIntent().getStringExtra("phoneNum"));
                             startActivity(t);
                             /*database.collection("Users")
                                     .document()

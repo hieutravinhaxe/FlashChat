@@ -90,24 +90,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*database.getReference().child("users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                listConver.clear();
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    User u = dataSnapshot.getValue(User.class);
-                    if(!u.getId().equals(auth.getUid())){
-                        listConver.add(u);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
         dialog.show();
         database.getReference().child("chats").addValueEventListener(new ValueEventListener() {
             @Override

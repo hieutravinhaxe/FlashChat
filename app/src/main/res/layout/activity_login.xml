@@ -72,26 +72,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:background="@android:color/holo_green_light"
+                android:background="@drawable/btn_background"
                 android:text="ĐĂNG NHẬP" />
 
             <TextView
                 android:id="@+id/resetPwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Quên mật khẩu"
+                android:fontFamily="sans-serif-condensed-light"
                 android:gravity="right"
+                android:text="Quên mật khẩu"
                 android:textColor="@android:color/holo_blue_light"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/regisTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed-light"
                 android:gravity="right"
                 android:text="Tạo tài khoản"
                 android:textColor="@android:color/holo_blue_light"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="italic" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

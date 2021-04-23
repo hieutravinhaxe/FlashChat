@@ -96,7 +96,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#1DE8D5"
+            android:background="@android:color/holo_blue_light"
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -111,6 +111,7 @@
                 android:id="@+id/title"
                 android:layout_width="237dp"
                 android:layout_height="30dp"
+                android:layout_gravity="center"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="TextView"
@@ -123,8 +124,8 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                app:tint="@color/white"
-                app:srcCompat="@drawable/plus" />
+                app:srcCompat="@drawable/plus"
+                app:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/btnListMember"
@@ -132,9 +133,9 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                app:tint="@color/white"
+                android:contentDescription="TODO"
                 app:srcCompat="@drawable/info"
-                android:contentDescription="TODO" />
+                app:tint="@color/white" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
