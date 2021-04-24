@@ -69,14 +69,24 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
                         database.getReference().child("users").child(auth.getUid())
                                 .child("friends").child(requests.get(position).getId())
-                                .child("status").setValue(1);
-                        database.getReference().child("users").child(requests.get(position).getId())
-                                .child("friends").child(auth.getUid())
-                                .child("status").setValue(1);
+                                .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
+                                database.getReference().child("users").child(requests.get(position).getId())
+                                        .child("friends").child(auth.getUid())
+                                        .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        requests.remove(position);
+                                        notifyItemRemoved(position);
+                                    }
+                                });
+                                requests.remove(position);
+                                notifyItemRemoved(position);
+                            }
+                        });
 
-                        requests.remove(position);
-                        notifyItemRemoved(position);
 
 
                     }

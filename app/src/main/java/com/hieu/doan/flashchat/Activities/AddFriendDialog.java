@@ -38,7 +38,7 @@ public class AddFriendDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String email = emailEditText.getText().toString();
+                        String email = emailEditText.getText().toString().trim();
                         listener.applyText(email);
                     }
                 });
