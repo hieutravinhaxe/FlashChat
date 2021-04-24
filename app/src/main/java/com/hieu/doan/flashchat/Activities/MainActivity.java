@@ -34,6 +34,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.hieu.doan.flashchat.Adapters.ListConverAdapter;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
+import com.hieu.doan.flashchat.call_api.GenAccessToken;
 import com.hieu.doan.flashchat.call_api.calling.Common;
 import com.hieu.doan.flashchat.call_api.calling.IncomingCallActivity;
 import com.hieu.doan.flashchat.call_api.calling.Utils;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //For calling
-    String token = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0p4T2hYSzVTYXZ2OFp1eDJ4dFB2SWtDblZCb0FpNEUzLTE2MTkyMDI5NTciLCJpc3MiOiJTS0p4T2hYSzVTYXZ2OFp1eDJ4dFB2SWtDblZCb0FpNEUzIiwiZXhwIjoxNjIxNzk0OTU3LCJ1c2VySWQiOiJzdWJpMiIsImljY19hcGkiOnRydWV9.T8uNx_73362tUusQ-qcwkNvzPRe9gjt5mPHIZnC20co";
+    String token;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private final String PREF_NAME = "com.hieu.doan.flashchat";
@@ -84,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         auth = FirebaseAuth.getInstance();
+        token = GenAccessToken.genAccessToken(auth.getUid());
+        Log.d("token", token);
+
         setupNotification();
         recyclerView = findViewById(R.id.recyclerView);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

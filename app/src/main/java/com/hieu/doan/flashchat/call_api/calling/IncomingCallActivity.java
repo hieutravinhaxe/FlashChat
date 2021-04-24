@@ -13,11 +13,19 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hieu.doan.flashchat.Activities.ChatActivity;
+import com.hieu.doan.flashchat.Activities.ManagerActivity;
+import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
 import com.stringee.call.StringeeCall;
 import com.stringee.common.StringeeConstant;
@@ -66,7 +74,19 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
         mRemoteViewContainer = (FrameLayout) findViewById(R.id.v_remote);
 
         tvFrom = (TextView) findViewById(R.id.tv_from);
-        tvFrom.setText(mStringeeCall.getFrom());
+        String idRecieved = mStringeeCall.getFrom();
+        FirebaseDatabase.getInstance().getReference().child("users").child(idRecieved).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                tvFrom.setText(user.getName());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         tvState = (TextView) findViewById(R.id.tv_state);
 

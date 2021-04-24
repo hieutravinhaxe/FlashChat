@@ -213,8 +213,8 @@ public class ChatActivity extends AppCompatActivity {
                 StringeeClient client = MainActivity.client;
                 if (client.isConnected()) {
                     Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
-                    intent.putExtra("from", "subi2");
-                    intent.putExtra("to", "subi1");
+                    intent.putExtra("from", name);
+                    intent.putExtra("to", receiveID);
                     intent.putExtra("is_video_call", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     //Put for chat

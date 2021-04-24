@@ -72,7 +72,7 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
         mRemoteViewContainer = (FrameLayout) findViewById(R.id.v_remote);
 
         tvTo = (TextView) findViewById(R.id.tv_to);
-        tvTo.setText(to);
+        tvTo.setText(name);
 
         tvState = (TextView) findViewById(R.id.tv_state);
 
@@ -84,7 +84,6 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
         btnVideo.setOnClickListener(this);
         btnSwitch = (ImageButton) findViewById(R.id.btn_switch);
         btnSwitch.setOnClickListener(this);
-
         isSpeaker = isVideoCall;
         btnSpeaker.setBackgroundResource(isSpeaker ? R.drawable.btn_speaker_on : R.drawable.btn_speaker_off);
 
