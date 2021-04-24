@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.hieu.doan.flashchat.Activities.ChatActivity;
 import com.hieu.doan.flashchat.Activities.MainActivity;
 import com.hieu.doan.flashchat.R;
@@ -42,7 +43,8 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
     private StringeeCall mStringeeCall;
     private String from;
     private String to;
-    private boolean isVideoCall;
+    static String sendID, receiveID, name, image;
+    public static boolean isVideoCall;
     private boolean isMute = false;
     private boolean isSpeaker = false;
     private boolean isVideo = false;
@@ -61,7 +63,10 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
         from = getIntent().getStringExtra("from");
         to = getIntent().getStringExtra("to");
         isVideoCall = getIntent().getBooleanExtra("is_video_call", false);
-
+        name = getIntent().getStringExtra("name");
+        receiveID = getIntent().getStringExtra("receiveID");
+        sendID = FirebaseAuth.getInstance().getUid();
+        image = getIntent().getStringExtra("image");
 
         mLocalViewContainer = (FrameLayout) findViewById(R.id.v_local);
         mRemoteViewContainer = (FrameLayout) findViewById(R.id.v_remote);
@@ -136,7 +141,12 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("name", name);
+        intent.putExtra("receiveID", receiveID);
+        intent.putExtra("sendID", sendID);
+        intent.putExtra("image", image);
+        Log.d("chatchit", name + "//" + receiveID + "//" + sendID + "//" + image);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
 

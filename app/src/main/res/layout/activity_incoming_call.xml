@@ -47,7 +47,7 @@
             android:layout_below="@id/tv_from"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:text="Incoming call"
+            android:text="Đang có cuộc gọi đến"
             android:textColor="#ffffff"
             android:textSize="16sp" />
     </LinearLayout>

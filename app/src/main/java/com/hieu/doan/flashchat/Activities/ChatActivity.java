@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -50,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseDatabase database;
     FirebaseStorage storage;
     Boolean isCalling = false;
-    String sendRoom, receiveRoom, sendID, receiveID;
+    String sendRoom, receiveRoom, sendID, receiveID, name, image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +86,17 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.scrollToPosition(adapter.getItemCount() - 1);
 
-        String name = getIntent().getStringExtra("name");
+        name = getIntent().getStringExtra("name");
         receiveID = getIntent().getStringExtra("uID");
+        if (receiveID==null||receiveID.isEmpty()){
+            receiveID = getIntent().getStringExtra("receiveID");
+        }
         sendID = FirebaseAuth.getInstance().getUid();
-        String image = getIntent().getStringExtra("image");
+        if (sendID.isEmpty()||sendID==null){
+            sendID = getIntent().getStringExtra("sendID");
+        }
+        image = getIntent().getStringExtra("image");
+        Log.d("chatchit", name+"//"+receiveID+"//"+sendID+"//"+image);
 
         sendRoom = sendID + receiveID;
         receiveRoom = receiveID + sendID;
@@ -116,16 +124,15 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         textView.setText(name);
-       try {
-           if (image.equals("undefined")) {
-               imageView.setImageResource(R.drawable.profile);
-           } else {
-               Glide.with(this).load(image).into(imageView);
-           }
-       }
-       catch (Exception e){
+        try {
+            if (image.equals("undefined")) {
+                imageView.setImageResource(R.drawable.profile);
+            } else {
+                Glide.with(this).load(image).into(imageView);
+            }
+        } catch (Exception e) {
 
-       }
+        }
 
         sendImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,19 +210,21 @@ public class ChatActivity extends AppCompatActivity {
         callVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isCalling) {
-                    onBackPressed();
+                StringeeClient client = MainActivity.client;
+                if (client.isConnected()) {
+                    Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
+                    intent.putExtra("from", "subi2");
+                    intent.putExtra("to", "subi1");
+                    intent.putExtra("is_video_call", true);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    //Put for chat
+                    intent.putExtra("name", name);
+                    intent.putExtra("receiveID", receiveID);
+                    intent.putExtra("sendID", sendID);
+                    intent.putExtra("image", image);
+                    startActivity(intent);
                 } else {
-                    StringeeClient client = MainActivity.client;
-                    if (client.isConnected()) {
-                        Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
-                        intent.putExtra("from", "subi2");
-                        intent.putExtra("to", "subi1");
-                        intent.putExtra("is_video_call", true);
-                        startActivity(intent);
-                    } else {
-                        Utils.reportMessage(ChatActivity.this, "Stringee session not connected");
-                    }
+                    Utils.reportMessage(ChatActivity.this, "Không thể kết nối video call. Vui lòng thử lại sau!");
                 }
             }
         });

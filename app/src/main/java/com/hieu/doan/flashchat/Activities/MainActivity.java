@@ -31,13 +31,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.hieu.doan.flashchat.call_api.calling.CallingActivity;
-import com.hieu.doan.flashchat.call_api.calling.Common;
-import com.hieu.doan.flashchat.call_api.calling.IncomingCallActivity;
-import com.hieu.doan.flashchat.call_api.calling.Utils;
 import com.hieu.doan.flashchat.Adapters.ListConverAdapter;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
+import com.hieu.doan.flashchat.call_api.calling.Common;
+import com.hieu.doan.flashchat.call_api.calling.IncomingCallActivity;
+import com.hieu.doan.flashchat.call_api.calling.Utils;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
 import com.stringee.call.StringeeCall2;
@@ -263,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Utils.reportMessage(MainActivity.this, "StringeeClient fails to connect: " + stringeeError.getMessage());
+                        Utils.reportMessage(MainActivity.this, "Lỗi kết nối: " + stringeeError.getMessage());
                     }
                 });
             }

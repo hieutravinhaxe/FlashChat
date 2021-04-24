@@ -46,8 +46,8 @@ public class Notification {
                 new NotificationCompat.Builder(context, CALL_CHANNEL_ID)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setSound(null)
-                        .setContentTitle("IncomingCall")
-                        .setContentText("from: " + from)
+                        .setContentTitle("Đang có cuộc gọi đến")
+                        .setContentText("từ: " + from)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setCategory(NotificationCompat.CATEGORY_CALL)
                         .setContentIntent(pendingIntent);
