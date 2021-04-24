@@ -73,11 +73,10 @@ public class FriendRequestActivity extends AppCompatActivity {
 
                             final String userID = snapshot1.getKey();
                             if (st.equals("0")){
-
                                 database.getReference().child("users").addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                                    public void onDataChange(@NonNull DataSnapshot snapshot11) {
+                                        for(DataSnapshot dataSnapshot: snapshot11.getChildren()){
                                             User u = dataSnapshot.getValue(User.class);
                                             if (u.getId().equals(userID)) {
                                                 Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());
@@ -94,6 +93,7 @@ public class FriendRequestActivity extends AppCompatActivity {
                                 });
                             }
                         }
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override

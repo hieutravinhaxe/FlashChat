@@ -10,7 +10,7 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="60sp"
-        android:background="@android:color/holo_blue_light"
+        android:background="@android:color/holo_blue_dark"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
-                android:background="@android:color/holo_green_light"
+                android:background="@drawable/btn_background"
                 android:text="Lưu" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

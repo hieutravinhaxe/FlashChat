@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorAccent"
-        app:cardBackgroundColor="@color/colorAccent"
+        app:cardBackgroundColor="@android:color/holo_blue_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,12 +26,14 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="5dp"
                 android:src="@drawable/profile" />
 
             <TextView
                 android:id="@+id/groupNameListMember"
                 android:layout_width="168dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:padding="10dp"
                 android:text="TextView"

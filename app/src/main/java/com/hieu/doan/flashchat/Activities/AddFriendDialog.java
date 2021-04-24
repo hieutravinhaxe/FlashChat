@@ -26,6 +26,7 @@ public class AddFriendDialog extends AppCompatDialogFragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.add_friend_dialog, null);
+        emailEditText = view.findViewById(R.id.emailEditText);
 
         builder.setView(view)
                 .setTitle("Add a friend")
@@ -42,9 +43,6 @@ public class AddFriendDialog extends AppCompatDialogFragment {
                         listener.applyText(email);
                     }
                 });
-
-        emailEditText = view.findViewById(R.id.emailEditText);
-
         return builder.create();
     }
 
@@ -63,6 +61,4 @@ public class AddFriendDialog extends AppCompatDialogFragment {
     public interface AddfriendDialogListener {
         void applyText(String email);
     }
-
-
 }

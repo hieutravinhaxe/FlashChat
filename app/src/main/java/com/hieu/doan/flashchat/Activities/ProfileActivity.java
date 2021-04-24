@@ -100,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 else{
                     final String uId = auth.getUid();
-                    String phone = auth.getCurrentUser().getPhoneNumber();
+                    String phone = getIntent().getStringExtra("phoneNumber");
                     String userName = name.getText().toString();
                     String email = auth.getCurrentUser().getEmail();
 

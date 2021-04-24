@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,9 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.hieu.doan.flashchat.call_api.calling.CallingActivity;
+import com.hieu.doan.flashchat.call_api.calling.Utils;
 import com.hieu.doan.flashchat.Adapters.MessagesAdapter;
 import com.hieu.doan.flashchat.Models.Message;
 import com.hieu.doan.flashchat.R;
+import com.stringee.StringeeClient;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,8 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class ChatActivity extends AppCompatActivity {
-
-    private ImageView imageView, sendBtn, sendImage, attachBtn, btnback;
+    private ImageView imageView, sendBtn, sendImage, attachBtn, btnback, callVideo;
     private TextView textView;
     private EditText msgBox;
     private RecyclerView recyclerView;
@@ -47,22 +50,24 @@ public class ChatActivity extends AppCompatActivity {
     ProgressDialog dialog, dialog1;
     FirebaseDatabase database;
     FirebaseStorage storage;
-
-    String sendRoom, receiveRoom, sendID, receiveID;
+    Boolean isCalling = false;
+    String sendRoom, receiveRoom, sendID, receiveID, name, image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        isCalling = false;
 
         imageView = findViewById(R.id.imageAvatar);
         btnback = findViewById(R.id.btnBack);
-        textView  = findViewById(R.id.title);
+        textView = findViewById(R.id.title);
         recyclerView = findViewById(R.id.recyclerView);
         sendBtn = findViewById(R.id.sendBtn);
         msgBox = findViewById(R.id.msgBox);
         sendImage = findViewById(R.id.image);
         attachBtn = findViewById(R.id.attach);
+        callVideo = findViewById(R.id.callVideo);
 
         dialog = new ProgressDialog(this);
         dialog.setMessage("Đang tải hình lên");
@@ -79,12 +84,19 @@ public class ChatActivity extends AppCompatActivity {
         adapter = new MessagesAdapter(this, messages);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        recyclerView.scrollToPosition(adapter.getItemCount()-1);
+        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
 
-        String name = getIntent().getStringExtra("name");
+        name = getIntent().getStringExtra("name");
         receiveID = getIntent().getStringExtra("uID");
+        if (receiveID==null||receiveID.isEmpty()){
+            receiveID = getIntent().getStringExtra("receiveID");
+        }
         sendID = FirebaseAuth.getInstance().getUid();
-        String image = getIntent().getStringExtra("image");
+        if (sendID.isEmpty()||sendID==null){
+            sendID = getIntent().getStringExtra("sendID");
+        }
+        image = getIntent().getStringExtra("image");
+        Log.d("chatchit", name+"//"+receiveID+"//"+sendID+"//"+image);
 
         sendRoom = sendID + receiveID;
         receiveRoom = receiveID + sendID;
@@ -97,12 +109,12 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         messages.clear();
-                        for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Message message = dataSnapshot.getValue(Message.class);
                             messages.add(message);
                         }
                         adapter.notifyDataSetChanged();
-                        recyclerView.scrollToPosition(adapter.getItemCount()-1);
+                        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                     }
 
                     @Override
@@ -112,11 +124,14 @@ public class ChatActivity extends AppCompatActivity {
                 });
 
         textView.setText(name);
-        if(image.equals("undefined")){
-            imageView.setImageResource(R.drawable.profile);
-        }
-        else{
-            Glide.with(this).load(image).into(imageView);
+        try {
+            if (image.equals("undefined")) {
+                imageView.setImageResource(R.drawable.profile);
+            } else {
+                Glide.with(this).load(image).into(imageView);
+            }
+        } catch (Exception e) {
+
         }
 
         sendImage.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +150,7 @@ public class ChatActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.setType("*/*");
-                startActivityForResult(intent,1212);
+                startActivityForResult(intent, 1212);
             }
         });
 
@@ -152,10 +167,9 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String msgText = msgBox.getText().toString();
-                if(msgText.equals("")){
+                if (msgText.equals("")) {
 
-                }
-                else{
+                } else {
                     Date date = new Date();
                     final Message message = new Message(msgText, sendID, date.getTime());
 
@@ -188,29 +202,52 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
                     msgBox.setText("");
-                    recyclerView.scrollToPosition(adapter.getItemCount()-1);
+                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                }
+            }
+        });
+
+        callVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StringeeClient client = MainActivity.client;
+                if (client.isConnected()) {
+                    Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
+                    intent.putExtra("from", name);
+                    intent.putExtra("to", receiveID);
+                    intent.putExtra("is_video_call", true);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    //Put for chat
+                    intent.putExtra("name", name);
+                    intent.putExtra("receiveID", receiveID);
+                    intent.putExtra("sendID", sendID);
+                    intent.putExtra("image", image);
+                    startActivity(intent);
+                } else {
+                    Utils.reportMessage(ChatActivity.this, "Không thể kết nối video call. Vui lòng thử lại sau!");
                 }
             }
         });
 
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1212){
-            if(data != null){
-                if(data.getData() != null){
+        if (requestCode == 1212) {
+            if (data != null) {
+                if (data.getData() != null) {
                     Uri file = data.getData();
                     final String f = file.getLastPathSegment();
-                    final  String fileName = f.substring(f.lastIndexOf("/")+1);
+                    final String fileName = f.substring(f.lastIndexOf("/") + 1);
                     Calendar calendar = Calendar.getInstance();
-                    final StorageReference reference = storage.getReference().child("chats").child(calendar.getTimeInMillis()+"");
+                    final StorageReference reference = storage.getReference().child("chats").child(calendar.getTimeInMillis() + "");
                     dialog1.show();
                     reference.putFile(file).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 dialog1.dismiss();
                                 reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
@@ -226,7 +263,7 @@ public class ChatActivity extends AppCompatActivity {
                                         message.setMsg("file123456hvcseblhvjblasfv");
 
                                         HashMap<String, Object> lastMsgObj = new HashMap<>();
-                                        lastMsgObj.put("lastMsg", message.getMsg().equals("file123456hvcseblhvjblasfv")?"File":message.getMsg());
+                                        lastMsgObj.put("lastMsg", message.getMsg().equals("file123456hvcseblhvjblasfv") ? "File" : message.getMsg());
                                         lastMsgObj.put("lastMsgTime", message.getTimestamp());
 
                                         database.getReference().child("chats").child(sendRoom).updateChildren(lastMsgObj);
@@ -263,17 +300,17 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
 
-        if(requestCode == 1234){
-            if(data != null){
-                if(data.getData() != null){
+        if (requestCode == 1234) {
+            if (data != null) {
+                if (data.getData() != null) {
                     Uri selectImage = data.getData();
                     Calendar calendar = Calendar.getInstance();
-                    final StorageReference reference = storage.getReference().child("chats").child(calendar.getTimeInMillis()+ "");
+                    final StorageReference reference = storage.getReference().child("chats").child(calendar.getTimeInMillis() + "");
                     dialog.show();
                     reference.putFile(selectImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 dialog.dismiss();
                                 reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
@@ -288,7 +325,7 @@ public class ChatActivity extends AppCompatActivity {
                                         message.setMsg("photofefededeofkt");
 
                                         HashMap<String, Object> lastMsgObj = new HashMap<>();
-                                        lastMsgObj.put("lastMsg", message.getMsg().equals("photofefededeofkt")?"Hình ảnh":message.getMsg());
+                                        lastMsgObj.put("lastMsg", message.getMsg().equals("photofefededeofkt") ? "Hình ảnh" : message.getMsg());
                                         lastMsgObj.put("lastMsgTime", message.getTimestamp());
 
                                         database.getReference().child("chats").child(sendRoom).updateChildren(lastMsgObj);
@@ -300,20 +337,20 @@ public class ChatActivity extends AppCompatActivity {
                                                 .child("messages")
                                                 .push()
                                                 .setValue(message).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    database.getReference()
-                                                            .child("chats")
-                                                            .child(receiveRoom)
-                                                            .child("messages")
-                                                            .push()
-                                                            .setValue(message).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                                adapter.notifyDataSetChanged();
-                                                        }
-                                                    });
-                                                }
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                database.getReference()
+                                                        .child("chats")
+                                                        .child(receiveRoom)
+                                                        .child("messages")
+                                                        .push()
+                                                        .setValue(message).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        adapter.notifyDataSetChanged();
+                                                    }
+                                                });
+                                            }
 
                                         });
                                     }
@@ -324,7 +361,11 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         }
-        recyclerView.scrollToPosition(adapter.getItemCount()-1);
+
+        if (requestCode == 999) {
+            isCalling = true;
+        }
+        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         msgBox.setText("");
     }
 }

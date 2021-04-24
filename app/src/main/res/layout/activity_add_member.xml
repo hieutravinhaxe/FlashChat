@@ -21,17 +21,21 @@
 
             <ImageView
                 android:id="@+id/AddAvatarGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="27dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:padding="5dp"
                 app:srcCompat="@drawable/teamwork" />
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:padding="10dp"
+                android:text="TextView"
+                android:textSize="15dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

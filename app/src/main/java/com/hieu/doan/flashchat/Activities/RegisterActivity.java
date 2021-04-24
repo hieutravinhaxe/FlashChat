@@ -18,7 +18,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -53,26 +58,51 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validation()) {
-                    Intent i = new Intent(RegisterActivity.this, OTPActivity.class);
-                    i.putExtra("phoneNum", phoneNumber.getText().toString());
-                    i.putExtra("email", email.getText().toString());
-                    i.putExtra("password", pwd.getText().toString());
-                    startActivity(i);
-//                    register();
-                }
+                FirebaseDatabase.getInstance().getReference()
+                        .child("users")
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                boolean t = true;
+                                for(DataSnapshot snapshot1: snapshot.getChildren()){
+                                    User u = snapshot1.getValue(User.class);
+                                    if(u.getEmail().equals(email.getText().toString())){
+                                        t = false;
+                                    }
+                                }
+                                if(!t){
+                                    Toast.makeText(getApplicationContext(), "Email đã tồn tại", Toast.LENGTH_SHORT).show();
+                                }
+                                else if (validation() && t) {
+                                    Intent i = new Intent(RegisterActivity.this, OTPActivity.class);
+                                    i.putExtra("phoneNum", phoneNumber.getText().toString());
+                                    i.putExtra("email", email.getText().toString());
+                                    i.putExtra("password", pwd.getText().toString());
+                                    startActivity(i);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
             }
         });
     }
 
 
     private boolean validation() {
+
         String phone = phoneNumber.getText().toString().trim();
         String password = pwd.getText().toString().trim();
         String rePassword = rePwd.getText().toString().trim();
+        final String Email = email.getText().toString();
         if (TextUtils.isEmpty(phone)) {
             Toast.makeText(this, "Không được để trống số điện thoại", Toast.LENGTH_SHORT).show();
             return false;
