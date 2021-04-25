@@ -47,7 +47,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView textView;
     private EditText msgBox;
     private RecyclerView recyclerView;
-    private ArrayList<Message> messages;
+    private ArrayList<Message> messages =new ArrayList<>();
     private MessagesAdapter adapter;
     ProgressDialog dialog, dialog1;
     FirebaseDatabase database;
@@ -81,8 +81,6 @@ public class ChatActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
-
-        messages = new ArrayList<>();
         adapter = new MessagesAdapter(this, messages);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
