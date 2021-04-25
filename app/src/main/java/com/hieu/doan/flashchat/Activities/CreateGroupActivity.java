@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.Group;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
@@ -79,11 +80,12 @@ public class CreateGroupActivity extends AppCompatActivity {
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
+                                                            Friends f = new Friends(auth.getCurrentUser().getDisplayName(), null, auth.getUid(),null);
                                                             database.getReference().child("groups")
                                                                     .child(groupId)
                                                                     .child("members")
-                                                                    .push()
-                                                                    .setValue(auth.getUid())
+                                                                    .child(auth.getUid())
+                                                                    .setValue(f)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
@@ -109,11 +111,12 @@ public class CreateGroupActivity extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        Friends f = new Friends(auth.getCurrentUser().getDisplayName(), null, auth.getUid(),null);
                                         database.getReference().child("groups")
                                                 .child(groupId)
                                                 .child("members")
-                                                .push()
-                                                .setValue(auth.getUid())
+                                                .child(auth.getUid())
+                                                .setValue(f)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {

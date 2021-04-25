@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.hieu.doan.flashchat.Adapters.GroupMessagesAdapter;
 import com.hieu.doan.flashchat.Adapters.MessagesAdapter;
 import com.hieu.doan.flashchat.Models.Message;
 import com.hieu.doan.flashchat.Models.User;
@@ -40,7 +41,7 @@ import java.util.HashMap;
 public class GroupChatActivity extends AppCompatActivity {
 
     private ArrayList<Message> messages;
-    private MessagesAdapter adapter;
+    private GroupMessagesAdapter adapter;
     private RecyclerView recyclerView;
     private FirebaseDatabase database;
     private FirebaseStorage storage;
@@ -48,7 +49,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private EditText msgBox;
     private ImageView sendBtn, imageGroup, sendImage,sendFile, btnAddMember, btnListMember;
     private TextView groupName;
-    String sendID, groupID, imageUri;
+    String sendID, groupID, imageUri, senderName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         messages = new ArrayList<>();
         sendID = FirebaseAuth.getInstance().getUid();
-        adapter = new MessagesAdapter(this, messages);
+        adapter = new GroupMessagesAdapter(this, messages, getIntent().getStringExtra("groupId"));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         //groupID sẽ được truyền qua intent
@@ -94,6 +95,20 @@ public class GroupChatActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
+
+        database.getReference()
+                .child("users")
+                .child(sendID)
+                .child("name")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            senderName = task.getResult().getValue().toString();
+                        }
+                    }
+                });
 
         database.getReference()
                 .child("public")
@@ -136,7 +151,8 @@ public class GroupChatActivity extends AppCompatActivity {
                 }
                 else{
                     Date date = new Date();
-                    Message message = new Message(msgText, sendID, date.getTime());
+                    Message message = new Message(msgText,sendID, date.getTime());
+                    message.setSenderName(senderName);
                     msgBox.setText("");
 
                     HashMap<String, Object> lastMsgObj = new HashMap<>();
@@ -221,6 +237,7 @@ public class GroupChatActivity extends AppCompatActivity {
                                         msgBox.setText("");
                                         Date date = new Date();
                                         final Message message = new Message(msgText, sendID, date.getTime());
+                                        message.setSenderName(senderName);
                                         message.setFileUri(pathFile);
                                         message.setFileName(fileName);
                                         message.setMsg("file123456hvcseblhvjblasfv");
@@ -273,6 +290,7 @@ public class GroupChatActivity extends AppCompatActivity {
                                         msgBox.setText("");
                                         Date date = new Date();
                                         final Message message = new Message(msgText, sendID, date.getTime());
+                                        message.setSenderName(senderName);
                                         message.setImageUri(pathImage);
                                         message.setMsg("photofefededeofkt");
 

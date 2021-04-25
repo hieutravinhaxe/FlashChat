@@ -1,9 +1,17 @@
 package com.hieu.doan.flashchat.Models;
 
 public class Message {
-    private String msgID, msg, senderID, imageUri, fileUri, fileName;
+    private String msgID, msg, senderID, imageUri, fileUri, fileName, senderName;
     private long  timestamp;
     private int felling;
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
 
     public String getFileName() {
         return fileName;

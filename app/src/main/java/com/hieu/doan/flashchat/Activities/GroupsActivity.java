@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hieu.doan.flashchat.Adapters.GroupsAdapter;
+import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.Group;
 import com.hieu.doan.flashchat.R;
 
@@ -88,7 +89,7 @@ public class GroupsActivity extends AppCompatActivity {
 
         database.getReference().child("groups").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull final DataSnapshot snapshot) {
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
                     final Group g = snapshot1.getValue(Group.class);
                     //check user is a most of group's members
@@ -100,8 +101,8 @@ public class GroupsActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot17) {
                                     for(DataSnapshot snapshot12: snapshot17.getChildren()){
-                                        String memberId = snapshot12.getValue().toString();
-                                        if(memberId.equals(FirebaseAuth.getInstance().getUid())){
+                                        Friends t = snapshot12.getValue(Friends.class);
+                                        if(t.getId().equals(FirebaseAuth.getInstance().getUid())){
                                             groups.add(g);
                                         }
                                     }
