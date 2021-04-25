@@ -86,6 +86,19 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
             }
         });
 
+        database.getReference().child("users")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        listFriends.clear();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
         database.getReference()
                 .child("users")
                 .child(auth.getUid())
@@ -93,7 +106,9 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        listFriends.clear();
                         for(DataSnapshot snapshot1: snapshot.getChildren()) {
+
                             String status = snapshot1.child("status").getValue().toString();
                             String friend = snapshot.getValue().toString();
 
@@ -103,7 +118,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                                 database.getReference().child("users").addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot2) {
-                                        listFriends.clear();
+
                                         for(DataSnapshot dataSnapshot: snapshot2.getChildren()){
                                             User u = dataSnapshot.getValue(User.class);
                                             if (u.getId().equals(userID)) {

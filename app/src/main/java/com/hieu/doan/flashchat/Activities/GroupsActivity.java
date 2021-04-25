@@ -133,5 +133,6 @@ public class GroupsActivity extends AppCompatActivity {
 
             }
         });
+        dialog.dismiss();
     }
 }

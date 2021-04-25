@@ -78,11 +78,11 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                                         .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        requests.remove(position);
+                                        requests.remove(friend);
                                         notifyItemRemoved(position);
                                     }
                                 });
-                                requests.remove(position);
+                                requests.remove(friend);
                                 notifyItemRemoved(position);
                             }
                         });
