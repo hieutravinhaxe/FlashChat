@@ -39,7 +39,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     private FirebaseAuth auth;
     User userCurrent = MainActivity.userCurrent;
 
-    public FriendRequestAdapter(Context context, List<Friends> requests){
+    public FriendRequestAdapter(Context context, List<Friends> requests) {
         this.context = context;
         this.requests = requests;
     }
@@ -80,7 +80,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 User u = snapshot.getValue(User.class);
-                                MyResponse.sendNotifications(u.getToken(),"Thông báo", userCurrent.getName()+"userCurrent đã chấp nhận kết bạn ");
+                                MyResponse.sendNotifications(u.getToken(), "Thông báo", userCurrent.getName() + "userCurrent đã chấp nhận kết bạn ");
                             }
 
                             @Override
@@ -88,9 +88,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
                             }
                         });
-
-                        requests.remove(friend);
-                        notifyItemRemoved(position);
                     }
                 });
 
@@ -111,7 +108,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                     }
                 });
 
-                builder.setNeutralButton("Hủy",new DialogInterface.OnClickListener() {
+                builder.setNeutralButton("Hủy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -131,6 +128,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
         private TextView textView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 

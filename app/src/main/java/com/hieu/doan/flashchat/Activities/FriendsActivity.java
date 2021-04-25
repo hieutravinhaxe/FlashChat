@@ -102,9 +102,9 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
 
                                 database.getReference().child("users").addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
                                         listFriends.clear();
-                                        for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                                        for(DataSnapshot dataSnapshot: snapshot2.getChildren()){
                                             User u = dataSnapshot.getValue(User.class);
                                             if (u.getId().equals(userID)) {
                                                 Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());

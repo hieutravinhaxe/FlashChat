@@ -75,14 +75,20 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                         switch (menuItem.getItemId()) {
                             case R.id.btnDelete:
                                 database.getReference().child("users").child(auth.getUid()).
-                                        child("friends").child(friends.get(position).getId()).removeValue()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        child("friends").child(friends.get(position).getId())
+                                        .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         friends.remove(position);
                                         notifyItemRemoved(position);
                                     }
                                 });
+
+                                database.getReference().child("users").child(friend.getId()).
+                                        child("friends").child(auth.getUid()).removeValue();
+
+
+
                                 Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                                 break;
                             default:
