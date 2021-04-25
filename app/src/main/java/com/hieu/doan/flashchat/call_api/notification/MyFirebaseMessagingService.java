@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.hieu.doan.flashchat.call_api.calling.Common;
@@ -24,7 +26,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             MainActivity.client.registerPushToken(s, new StatusListener() {
                 @Override
                 public void onSuccess() {
-
+                    FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getUid()).child("token").setValue(s);
                 }
             });
         }

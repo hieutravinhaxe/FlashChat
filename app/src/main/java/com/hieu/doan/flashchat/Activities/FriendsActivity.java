@@ -27,6 +27,7 @@ import com.hieu.doan.flashchat.Adapters.FriendsAdapter;
 import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
+import com.hieu.doan.flashchat.call_api.notification.Service.MyResponse;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
     private ImageView add;
     private ImageView requests;
     private boolean t = false;
+    User userCurrent = MainActivity.userCurrent;
 
 
     @Override
@@ -249,6 +251,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         Toast.makeText(FriendsActivity.this, "Đã gửi lời mời kết bạn", Toast.LENGTH_SHORT).show();
+                                        MyResponse.sendNotifications(u.getToken(),"Thông báo", "Lời mời kết bạn từ "+ userCurrent.getName() );
                                     }
                                 });
                             }

@@ -35,7 +35,7 @@ public class ManagerActivity extends AppCompatActivity {
     private Button btnEdit, btnChangePwd;
     private FirebaseDatabase database;
     private FirebaseAuth auth;
-    private ArrayList<User> user;
+    static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +56,16 @@ public class ManagerActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        database.getReference().child("users").child(auth.getUid()).addValueEventListener(new ValueEventListener() {
+        database.getReference().child("users").child(auth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
+                user = snapshot.getValue(User.class);
                 name.setText(user.getName());
                 phone.setText(user.getPhone());
                 email.setText(user.getEmail());
-                if(user.getImage().equals("undefined")){
+                if (user.getImage().equals("undefined")) {
                     avt.setImageResource(R.drawable.profile);
-                }else {
+                } else {
                     Glide.with(ManagerActivity.this).load(user.getImage()).into(avt);
                 }
             }
@@ -126,23 +126,23 @@ public class ManagerActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menuChat:
                         //Toast.makeText(getApplicationContext(), "chat", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         finish();
                         return true;
                     case R.id.menuFriends:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         finish();
                         return true;
                     case R.id.menuGroup:
                         //Toast.makeText(getApplicationContext(), "call", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         finish();
                         return true;
                     case R.id.menuManager:

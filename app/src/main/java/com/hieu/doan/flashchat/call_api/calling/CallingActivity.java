@@ -187,23 +187,23 @@ public class CallingActivity extends AppCompatActivity implements View.OnClickLi
                         mSignalingState = signalingState;
                         switch (signalingState) {
                             case CALLING:
-                                tvState.setText("Đang kết nối...");
+                                tvState.setText(R.string.connecting);
                                 break;
                             case RINGING:
-                                tvState.setText("Đang đổ chuông...");
+                                tvState.setText(R.string.ringing);
                                 break;
                             case ANSWERED:
-                                tvState.setText("Đã kết nối");
+                                tvState.setText(R.string.connected);
                                 if (mMediaState == StringeeCall.MediaState.CONNECTED) {
-                                    tvState.setText("Đã kết nối");
+                                    tvState.setText(R.string.connected);
                                     Common.audioManager.setSpeakerphoneOn(isVideoCall);
                                 }
                                 break;
                             case BUSY:
-                                tvState.setText("Busy");
+                                tvState.setText(R.string.busy);
                                 endCall();
                             case ENDED:
-                                tvState.setText("Ended");
+                                tvState.setText(R.string.end_call);
                                 endCall();
                                 break;
                         }

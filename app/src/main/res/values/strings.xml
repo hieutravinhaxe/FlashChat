@@ -10,4 +10,11 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="access_token">eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS0p4T2hYSzVTYXZ2OFp1eDJ4dFB2SWtDblZCb0FpNEUzLTE2MTkxNDAxMDUiLCJpc3MiOiJTS0p4T2hYSzVTYXZ2OFp1eDJ4dFB2SWtDblZCb0FpNEUzIiwiZXhwIjoxNjIxNzMyMTA1LCJyZXN0X2FwaSI6dHJ1ZX0.ZsnAs8MGrV89Pzpl_EtqUefbjYiFx7bMwP2qfABbzU0</string>
+    <string name="channelId">Notify</string>
+    <string name="connecting">Đang kết nối...</string>
+    <string name="ringing">Đang đổ chuông...</string>
+    <string name="connected">Đã kết nối</string>
+    <string name="busy">Người dùng đang bận</string>
+    <string name="end_call">Kết thúc cuộc gọi</string>
+
 </resources>

@@ -119,7 +119,6 @@ public class EditProfileActivity extends AppCompatActivity {
                                             String phone = phoneEditText.getText().toString();
                                             String userName = nameEditText.getText().toString();
                                             String email = auth.getCurrentUser().getEmail();
-
                                             User user = new User(uId,email, phone, imageUri, userName);
                                             database.getReference()
                                                     .child("users")

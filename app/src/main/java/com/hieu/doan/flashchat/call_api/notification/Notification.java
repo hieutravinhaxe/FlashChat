@@ -9,9 +9,15 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hieu.doan.flashchat.Activities.MainActivity;
+import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.call_api.calling.Common;
 import com.hieu.doan.flashchat.call_api.calling.StringeeAudioManager;
 import com.hieu.doan.flashchat.call_api.calling.Utils;
@@ -24,7 +30,7 @@ public class Notification {
     private static final String CALL_CHANNEL_ID = "com.stringee.sample.call.notification";
     private static final String CALL_CHANNEL_NAME = "Notification Call Channel Sample";
     private static final String CALL_CHANNEL_DESC = "Channel sample for call notification";
-
+    private static String name;
     public static void notifyIncomingCall(final Context context, String from) {
         NotificationManager mNotificationManager;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -37,6 +43,19 @@ public class Notification {
             mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
 
+        FirebaseDatabase.getInstance().getReference().child("users").child(from).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user  = snapshot.getValue(User.class);
+                name = user.getName();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) (System.currentTimeMillis() & 0xfffffff),
@@ -47,7 +66,7 @@ public class Notification {
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setSound(null)
                         .setContentTitle("Đang có cuộc gọi đến")
-                        .setContentText("từ: " + from)
+                        .setContentText("từ: " + name)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setCategory(NotificationCompat.CATEGORY_CALL)
                         .setContentIntent(pendingIntent);
