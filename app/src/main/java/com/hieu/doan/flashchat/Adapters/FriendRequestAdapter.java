@@ -24,11 +24,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hieu.doan.flashchat.Activities.FriendRequestActivity;
 import com.hieu.doan.flashchat.Activities.FriendsActivity;
-import com.hieu.doan.flashchat.Activities.MainActivity;
 import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
-import com.hieu.doan.flashchat.call_api.notification.Service.MyResponse;
 
 import java.util.List;
 
@@ -37,9 +35,8 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     List<Friends> requests;
     private FirebaseDatabase database;
     private FirebaseAuth auth;
-    User userCurrent = MainActivity.userCurrent;
 
-    public FriendRequestAdapter(Context context, List<Friends> requests) {
+    public FriendRequestAdapter(Context context, List<Friends> requests){
         this.context = context;
         this.requests = requests;
     }
@@ -72,22 +69,24 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
                         database.getReference().child("users").child(auth.getUid())
                                 .child("friends").child(requests.get(position).getId())
-                                .child("status").setValue(1);
-                        database.getReference().child("users").child(requests.get(position).getId())
-                                .child("friends").child(auth.getUid())
-                                .child("status").setValue(1);
-                        database.getReference("users").child(requests.get(position).getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                User u = snapshot.getValue(User.class);
-                                MyResponse.sendNotifications(u.getToken(), "Thông báo", userCurrent.getName() + " đã chấp nhận kết bạn ");
-                            }
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
+                                database.getReference().child("users").child(requests.get(position).getId())
+                                        .child("friends").child(auth.getUid())
+                                        .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        requests.remove(position);
+                                        notifyItemRemoved(position);
+                                    }
+                                });
+                                requests.remove(position);
+                                notifyItemRemoved(position);
                             }
                         });
+
                     }
                 });
 
@@ -108,7 +107,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                     }
                 });
 
-                builder.setNeutralButton("Hủy", new DialogInterface.OnClickListener() {
+                builder.setNeutralButton("Hủy",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -128,7 +127,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
         private TextView textView;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
