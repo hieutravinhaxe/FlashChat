@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class GroupsActivity extends AppCompatActivity {
     private GroupsAdapter adapter;
     private ArrayList<Group> groups;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,11 @@ public class GroupsActivity extends AppCompatActivity {
         groups = new ArrayList<Group>();
         adapter = new GroupsAdapter(this, groups);
         recyclerView.setAdapter(adapter);
+
+        dialog = new ProgressDialog(this);
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading your groups...");
+        dialog.show();
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +97,7 @@ public class GroupsActivity extends AppCompatActivity {
         database.getReference().child("groups").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot snapshot) {
+                groups.clear();
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
                     final Group g = snapshot1.getValue(Group.class);
                     //check user is a most of group's members
@@ -107,6 +115,7 @@ public class GroupsActivity extends AppCompatActivity {
                                         }
                                     }
                                     adapter.notifyDataSetChanged();
+                                    dialog.dismiss();
                                 }
 
                                 @Override
@@ -116,6 +125,7 @@ public class GroupsActivity extends AppCompatActivity {
                             });
                 }
                 adapter.notifyDataSetChanged();
+
             }
 
             @Override

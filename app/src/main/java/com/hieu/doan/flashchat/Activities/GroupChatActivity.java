@@ -47,7 +47,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private ProgressDialog dialog, dialog1;
     private EditText msgBox;
-    private ImageView sendBtn, imageGroup, sendImage,sendFile, btnAddMember, btnListMember;
+    private ImageView sendBtn, imageGroup, sendImage,sendFile, btnAddMember, btnListMember, btnEdit;
     private TextView groupName;
     String sendID, groupID, imageUri, senderName;
 
@@ -57,6 +57,7 @@ public class GroupChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_chat);
 
         msgBox = findViewById(R.id.msgBoxGroup);
+        btnEdit = findViewById(R.id.editGroupInfo);
         sendBtn = findViewById(R.id.sendBtnGroup);
         groupName = findViewById(R.id.title);
         recyclerView = findViewById(R.id.recyclerViewGroup);
@@ -202,6 +203,17 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
+                intent.putExtra("groupName", groupName.getText().toString());
+                intent.putExtra("groupImage", imageUri);
+                intent.putExtra("groupID", groupID);
+                startActivity(intent);
+            }
+        });
+
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), EditGroupActivity.class);
                 intent.putExtra("groupName", groupName.getText().toString());
                 intent.putExtra("groupImage", imageUri);
                 intent.putExtra("groupID", groupID);

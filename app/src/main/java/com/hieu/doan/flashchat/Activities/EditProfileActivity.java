@@ -1,5 +1,6 @@
 package com.hieu.doan.flashchat.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private ArrayList<User> user;
     Uri LinkImage;
+    private ProgressDialog dialog;
 
 
     @Override
@@ -56,6 +58,10 @@ public class EditProfileActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         btnSave = findViewById(R.id.btnSave);
         btnBack = findViewById(R.id.btnBack);
+
+        dialog = new ProgressDialog(this);
+        dialog.setCancelable(false);
+        dialog.setMessage("Please wait...!");
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -103,7 +109,7 @@ public class EditProfileActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                dialog.show();
                 if (validation()){
                     if(LinkImage != null){
                         final StorageReference reference = storage.getReference().child("Profiles").child(auth.getUid());
@@ -126,6 +132,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                                     .setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
+                                                    dialog.dismiss();
                                                     startActivity(new Intent(EditProfileActivity.this, ManagerActivity.class));
                                                     finish();
                                                     Toast.makeText(EditProfileActivity.this, "Chỉnh sửa thành công",
@@ -160,6 +167,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                         .setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        dialog.dismiss();
                                         startActivity(new Intent(EditProfileActivity.this, ManagerActivity.class));
                                         finish();
                                     }
@@ -197,10 +205,12 @@ public class EditProfileActivity extends AppCompatActivity {
         String phone = phoneEditText.getText().toString().trim();
         String name = nameEditText.getText().toString().trim();
         if(TextUtils.isEmpty(phone)){
+            dialog.dismiss();
             Toast.makeText(this, "Không được để trống số điện thoại", Toast.LENGTH_SHORT).show();
             return false;
         }
         else if(TextUtils.isEmpty(name)){
+            dialog.dismiss();
             Toast.makeText(this, "Không được để trống Tên", Toast.LENGTH_SHORT).show();
             return false;
         }

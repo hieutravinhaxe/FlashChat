@@ -128,6 +128,16 @@
                 app:tint="@color/white" />
 
             <ImageView
+                android:id="@+id/editGroupInfo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/pencil" />
+
+            <ImageView
                 android:id="@+id/btnListMember"
                 android:layout_width="30dp"
                 android:layout_height="30dp"

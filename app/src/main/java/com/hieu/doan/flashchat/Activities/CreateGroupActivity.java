@@ -59,6 +59,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Chưa nhập tên group", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    dialog.show();
                     final String groupId = calendar.getTimeInMillis()+"";
                     final StorageReference reference = storage.getReference().child("Profiles").child(groupId);
                     if(imageGroupUri != null){
@@ -89,6 +90,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
+                                                                            dialog.dismiss();
                                                                             startActivity(new Intent(CreateGroupActivity.this, GroupsActivity.class));
                                                                             finish();
                                                                         }
@@ -120,6 +122,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
+                                                        dialog.dismiss();
                                                         startActivity(new Intent(CreateGroupActivity.this, GroupsActivity.class));
                                                         finish();
                                                     }
