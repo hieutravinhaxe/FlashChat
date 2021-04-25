@@ -80,7 +80,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 User u = snapshot.getValue(User.class);
-                                MyResponse.sendNotifications(u.getToken(), "Thông báo", userCurrent.getName() + "userCurrent đã chấp nhận kết bạn ");
+                                MyResponse.sendNotifications(u.getToken(), "Thông báo", userCurrent.getName() + " đã chấp nhận kết bạn ");
                             }
 
                             @Override

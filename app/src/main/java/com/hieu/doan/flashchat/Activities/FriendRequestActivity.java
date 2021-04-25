@@ -2,14 +2,11 @@ package com.hieu.doan.flashchat.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +15,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hieu.doan.flashchat.Adapters.FriendRequestAdapter;
-import com.hieu.doan.flashchat.Adapters.FriendsAdapter;
 import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
