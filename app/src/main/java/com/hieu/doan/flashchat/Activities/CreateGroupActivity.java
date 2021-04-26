@@ -18,13 +18,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.Group;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
+import com.hieu.doan.flashchat.call_api.notification.Service.Data;
 
 import java.util.Calendar;
 
@@ -38,6 +43,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private ProgressDialog dialog;
+    private User my;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +57,24 @@ public class CreateGroupActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setMessage("Wait a moment");
 
+        database.getReference().child("users")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                            User u = snapshot1.getValue(User.class);
+                            if(u.getId().equals(auth.getUid())){
+                                my = u;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +82,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Chưa nhập tên group", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    dialog.show();
                     final String groupId = calendar.getTimeInMillis()+"";
                     final StorageReference reference = storage.getReference().child("Profiles").child(groupId);
                     if(imageGroupUri != null){
@@ -79,14 +104,16 @@ public class CreateGroupActivity extends AppCompatActivity {
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
+                                                            Friends f = new Friends(my.getName(), my.getImage(), auth.getUid(),my.getEmail());
                                                             database.getReference().child("groups")
                                                                     .child(groupId)
                                                                     .child("members")
-                                                                    .push()
-                                                                    .setValue(auth.getUid())
+                                                                    .child(auth.getUid())
+                                                                    .setValue(f)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
+                                                                            dialog.dismiss();
                                                                             startActivity(new Intent(CreateGroupActivity.this, GroupsActivity.class));
                                                                             finish();
                                                                         }
@@ -109,14 +136,16 @@ public class CreateGroupActivity extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        Friends f = new Friends(my.getName(), my.getImage(), auth.getUid(),my.getEmail());
                                         database.getReference().child("groups")
                                                 .child(groupId)
                                                 .child("members")
-                                                .push()
-                                                .setValue(auth.getUid())
+                                                .child(auth.getUid())
+                                                .setValue(f)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
+                                                        dialog.dismiss();
                                                         startActivity(new Intent(CreateGroupActivity.this, GroupsActivity.class));
                                                         finish();
                                                     }

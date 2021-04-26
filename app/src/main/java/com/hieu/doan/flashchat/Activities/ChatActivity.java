@@ -28,11 +28,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.call_api.calling.CallingActivity;
 import com.hieu.doan.flashchat.call_api.calling.Utils;
 import com.hieu.doan.flashchat.Adapters.MessagesAdapter;
 import com.hieu.doan.flashchat.Models.Message;
 import com.hieu.doan.flashchat.R;
+import com.hieu.doan.flashchat.call_api.notification.Service.MyResponse;
 import com.stringee.StringeeClient;
 
 import java.util.ArrayList;
@@ -45,20 +47,20 @@ public class ChatActivity extends AppCompatActivity {
     private TextView textView;
     private EditText msgBox;
     private RecyclerView recyclerView;
-    private ArrayList<Message> messages;
+    private ArrayList<Message> messages =new ArrayList<>();
     private MessagesAdapter adapter;
     ProgressDialog dialog, dialog1;
     FirebaseDatabase database;
     FirebaseStorage storage;
     Boolean isCalling = false;
     String sendRoom, receiveRoom, sendID, receiveID, name, image;
+    User userCurrent = MainActivity.userCurrent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         isCalling = false;
-
         imageView = findViewById(R.id.imageAvatar);
         btnback = findViewById(R.id.btnBack);
         textView = findViewById(R.id.title);
@@ -79,8 +81,6 @@ public class ChatActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
-
-        messages = new ArrayList<>();
         adapter = new MessagesAdapter(this, messages);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -88,19 +88,18 @@ public class ChatActivity extends AppCompatActivity {
 
         name = getIntent().getStringExtra("name");
         receiveID = getIntent().getStringExtra("uID");
-        if (receiveID==null||receiveID.isEmpty()){
+        if (receiveID == null || receiveID.isEmpty()) {
             receiveID = getIntent().getStringExtra("receiveID");
         }
         sendID = FirebaseAuth.getInstance().getUid();
-        if (sendID.isEmpty()||sendID==null){
+        if (sendID.isEmpty() || sendID == null) {
             sendID = getIntent().getStringExtra("sendID");
         }
         image = getIntent().getStringExtra("image");
-        Log.d("chatchit", name+"//"+receiveID+"//"+sendID+"//"+image);
+        Log.d("chatchit", name + "//" + receiveID + "//" + sendID + "//" + image);
 
         sendRoom = sendID + receiveID;
         receiveRoom = receiveID + sendID;
-
         database.getReference()
                 .child("chats")
                 .child(sendRoom)
@@ -167,6 +166,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String msgText = msgBox.getText().toString();
+                Log.d("token send",msgText );
                 if (msgText.equals("")) {
 
                 } else {
@@ -197,6 +197,25 @@ public class ChatActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     adapter.notifyDataSetChanged();
+
+                                    database.getReference("users").child(receiveID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            User u = snapshot.getValue(User.class);
+                                            try {
+                                                MyResponse.sendNotifications(u.getToken(), "Bạn có tin nhắn mới từ " + userCurrent.getName(), msgText);
+                                            }
+                                            catch (Exception ex){
+
+                                            }
+                                            Log.d("token send", u.getToken());
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -213,7 +232,7 @@ public class ChatActivity extends AppCompatActivity {
                 StringeeClient client = MainActivity.client;
                 if (client.isConnected()) {
                     Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
-                    intent.putExtra("from", name);
+                    intent.putExtra("from", client.getUserId());
                     intent.putExtra("to", receiveID);
                     intent.putExtra("is_video_call", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -339,6 +358,7 @@ public class ChatActivity extends AppCompatActivity {
                                                 .setValue(message).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
+                                                //Send notification
                                                 database.getReference()
                                                         .child("chats")
                                                         .child(receiveRoom)

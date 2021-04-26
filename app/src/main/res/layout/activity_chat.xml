@@ -8,26 +8,26 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="60dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/textbox_outline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
-            android:background="@drawable/textbox_outline"
             android:gravity="center"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/msgBox"
-                android:layout_width="260dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
@@ -48,7 +48,7 @@
                 android:id="@+id/attach"
                 android:layout_width="20dp"
                 android:layout_height="54dp"
-                android:layout_marginRight="10sp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/paperclip" />
 
@@ -72,7 +72,7 @@
         android:id="@+id/sendBtn"
         android:layout_width="54dp"
         android:layout_height="53dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="15dp"
         android:background="@drawable/circle_send"
         android:padding="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/cardView"
@@ -109,8 +109,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageAvatar"
-                android:layout_width="17dp"
-                android:layout_height="match_parent"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="5sp"
                 android:layout_weight="1"
                 android:src="@drawable/profile" />
@@ -130,8 +130,10 @@
                 android:id="@+id/callVideo"
                 android:layout_width="34dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:padding="15dp"
+                android:padding="5dp"
                 app:srcCompat="@drawable/ic_baseline_videocam_24"
                 app:tint="@color/cardview_light_background" />
 

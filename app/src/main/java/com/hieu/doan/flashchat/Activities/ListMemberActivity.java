@@ -71,27 +71,12 @@ public class ListMemberActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listMember.clear();
-                for(final DataSnapshot snapshot1: snapshot.getChildren()){
+                for(DataSnapshot snapshot1: snapshot.getChildren()){
                     //Log.i("CHECK",snapshot1.getValue().toString());
-                    FirebaseDatabase.getInstance().getReference()
-                            .child("users")
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot12) {
-                                    for(DataSnapshot snapshot11: snapshot12.getChildren()){
-                                        User u = snapshot11.getValue(User.class);
-                                        if(!u.getId().equals(FirebaseAuth.getInstance().getUid()) && u.getId().equals(snapshot1.getValue().toString())){
-                                            listMember.add(u);
-                                        }
-                                    }
-                                    adapter.notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
+                    User u  = snapshot1.getValue(User.class);
+                    if(!u.getId().equals(FirebaseAuth.getInstance().getUid())){
+                        listMember.add(u);
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }

@@ -11,7 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.Message;
 import com.hieu.doan.flashchat.R;
 
@@ -24,11 +32,13 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
 
     Context context;
     ArrayList<Message> messages;
+    String GroupId;
 
 
-    public GroupMessagesAdapter(Context context, ArrayList<Message> messagesList) {
+    public GroupMessagesAdapter(Context context, ArrayList<Message> messagesList, String groupId) {
         this.context = context;
         this.messages = messagesList;
+        this.GroupId = groupId;
     }
 
     @NonNull
@@ -58,30 +68,51 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Message message = messages.get(position);
-
+        final Message message = messages.get(position);
         if(holder.getClass() == SendViewHolder.class){
             SendViewHolder sendViewHolder = (SendViewHolder) holder;
-            if(message.getMsg().equals("photo")){
+            if(message.getMsg().equals("photofefededeofkt")){
+                sendViewHolder.attachFileSend.setVisibility(View.GONE);
                 sendViewHolder.sendTV.setVisibility(View.GONE);
                 sendViewHolder.image.setVisibility(View.VISIBLE);
                 Glide.with(context).load(message.getImageUri()).into(sendViewHolder.image);
             }
-            else {
+            else if(message.getMsg().equals("file123456hvcseblhvjblasfv")) {
+                sendViewHolder.sendTV.setVisibility(View.GONE);
+                sendViewHolder.image.setVisibility(View.GONE);
+                sendViewHolder.attachFileSend.setVisibility(View.VISIBLE);
+                sendViewHolder.attachFileSend.setText(message.getFileName());
+            }
+            else{
                 sendViewHolder.sendTV.setVisibility(View.VISIBLE);
                 sendViewHolder.image.setVisibility(View.GONE);
+                sendViewHolder.attachFileSend.setVisibility(View.GONE);
                 sendViewHolder.sendTV.setText(message.getMsg());
             }
         }
         else{
             ReceiveViewHolder receiveViewHolder = (ReceiveViewHolder) holder;
-            if(message.getMsg().equals("photo")){
+            if(message.getMsg().equals("photofefededeofkt")){
                 receiveViewHolder.receiveTV.setVisibility(View.GONE);
+                receiveViewHolder.attachFileReceive.setVisibility(View.GONE);
+                receiveViewHolder.senderName.setVisibility(View.VISIBLE);
                 receiveViewHolder.image.setVisibility(View.VISIBLE);
+                receiveViewHolder.senderName.setText(message.getSenderName());
                 Glide.with(context).load(message.getImageUri()).into(receiveViewHolder.image);
-            }else{
-                receiveViewHolder.receiveTV.setVisibility(View.VISIBLE);
+            }else if(message.getMsg().equals("file123456hvcseblhvjblasfv")){
+                receiveViewHolder.receiveTV.setVisibility(View.GONE);
+                receiveViewHolder.attachFileReceive.setVisibility(View.VISIBLE);
+                receiveViewHolder.senderName.setVisibility(View.VISIBLE);
                 receiveViewHolder.image.setVisibility(View.GONE);
+                receiveViewHolder.senderName.setText(message.getSenderName());
+                receiveViewHolder.attachFileReceive.setText(message.getFileName());
+            }
+            else{
+                receiveViewHolder.receiveTV.setVisibility(View.VISIBLE);
+                receiveViewHolder.attachFileReceive.setVisibility(View.GONE);
+                receiveViewHolder.senderName.setVisibility(View.VISIBLE);
+                receiveViewHolder.image.setVisibility(View.GONE);
+                receiveViewHolder.senderName.setText(message.getSenderName());
                 receiveViewHolder.receiveTV.setText(message.getMsg());
             }
         }
@@ -93,24 +124,27 @@ public class GroupMessagesAdapter extends RecyclerView.Adapter {
     }
 
     public class SendViewHolder extends RecyclerView.ViewHolder{
-        private TextView sendTV;
+        private TextView sendTV, attachFileSend;
         private ImageView image;
 
         public SendViewHolder (View itemView){
             super(itemView);
 
+            attachFileSend = itemView.findViewById(R.id.attachFile);
             sendTV = itemView.findViewById(R.id.SendTextView);
             image = itemView.findViewById(R.id.imageSend);
         }
     }
 
     public class ReceiveViewHolder extends RecyclerView.ViewHolder{
-        private TextView receiveTV;
+        private TextView receiveTV, senderName, attachFileReceive;
         private ImageView image;
 
         public ReceiveViewHolder (View itemView){
             super(itemView);
 
+            attachFileReceive = itemView.findViewById(R.id.fileReceiveGroup);
+            senderName = itemView.findViewById(R.id.senderName);
             receiveTV = itemView.findViewById(R.id.ReceiveTextView);
             image = itemView.findViewById(R.id.imageRecieve);
         }

@@ -59,8 +59,8 @@ public class ListFriendsAddToGroup extends RecyclerView.Adapter<ListFriendsAddTo
                         .child("groups")
                         .child(idGroup)
                         .child("members")
-                        .push()
-                        .setValue(friend.getId())
+                        .child(friend.getId())
+                        .setValue(friend)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

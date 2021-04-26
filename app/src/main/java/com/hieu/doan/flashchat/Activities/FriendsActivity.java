@@ -27,6 +27,7 @@ import com.hieu.doan.flashchat.Adapters.FriendsAdapter;
 import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
+import com.hieu.doan.flashchat.call_api.notification.Service.MyResponse;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,11 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
     private FirebaseAuth auth;
     private ImageView add;
     private ImageView requests;
+<<<<<<< HEAD
+=======
+    private boolean t = false;
+    User userCurrent = MainActivity.userCurrent;
+>>>>>>> f11a763782d8ecc976b25ad525a39c316e0ff375
 
 
     @Override
@@ -133,6 +139,64 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
             }
         });
 
+<<<<<<< HEAD
+=======
+        database.getReference().child("users")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        listFriends.clear();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+        database.getReference()
+                .child("users")
+                .child(auth.getUid())
+                .child("friends")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        listFriends.clear();
+                        for(DataSnapshot snapshot1: snapshot.getChildren()) {
+
+                            String status = snapshot1.child("status").getValue().toString();
+                            String friend = snapshot.getValue().toString();
+
+                            final String userID = snapshot1.getKey();
+                            if (status.equals("1")){
+
+                                database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+
+                                        for(DataSnapshot dataSnapshot: snapshot2.getChildren()){
+                                            User u = dataSnapshot.getValue(User.class);
+                                            if (u.getId().equals(userID)) {
+                                                Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());
+                                                listFriends.add(f);
+                                            }
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                            else if(status.equals("0")){
+                                requests.setColorFilter(ContextCompat.getColor(FriendsActivity.this,
+                                        R.color.red));
+                            }
+                        }
+                    }
+>>>>>>> f11a763782d8ecc976b25ad525a39c316e0ff375
 
 
 
@@ -234,6 +298,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         Toast.makeText(FriendsActivity.this, "Đã gửi lời mời kết bạn", Toast.LENGTH_SHORT).show();
+                                        MyResponse.sendNotifications(u.getToken(),"Thông báo", "Lời mời kết bạn từ "+ userCurrent.getName() );
                                     }
                                 });
                             }

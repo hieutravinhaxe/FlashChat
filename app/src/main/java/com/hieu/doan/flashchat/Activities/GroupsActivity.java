@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hieu.doan.flashchat.Adapters.GroupsAdapter;
+import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.Group;
 import com.hieu.doan.flashchat.R;
 
@@ -32,6 +34,7 @@ public class GroupsActivity extends AppCompatActivity {
     private GroupsAdapter adapter;
     private ArrayList<Group> groups;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +48,11 @@ public class GroupsActivity extends AppCompatActivity {
         groups = new ArrayList<Group>();
         adapter = new GroupsAdapter(this, groups);
         recyclerView.setAdapter(adapter);
+
+        dialog = new ProgressDialog(this);
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading your groups...");
+        dialog.show();
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +96,8 @@ public class GroupsActivity extends AppCompatActivity {
 
         database.getReference().child("groups").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull final DataSnapshot snapshot) {
+                groups.clear();
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
                     final Group g = snapshot1.getValue(Group.class);
                     //check user is a most of group's members
@@ -100,12 +109,13 @@ public class GroupsActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot17) {
                                     for(DataSnapshot snapshot12: snapshot17.getChildren()){
-                                        String memberId = snapshot12.getValue().toString();
-                                        if(memberId.equals(FirebaseAuth.getInstance().getUid())){
+                                        Friends t = snapshot12.getValue(Friends.class);
+                                        if(t.getId().equals(FirebaseAuth.getInstance().getUid())){
                                             groups.add(g);
                                         }
                                     }
                                     adapter.notifyDataSetChanged();
+                                    dialog.dismiss();
                                 }
 
                                 @Override
@@ -115,6 +125,7 @@ public class GroupsActivity extends AppCompatActivity {
                             });
                 }
                 adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -122,5 +133,6 @@ public class GroupsActivity extends AppCompatActivity {
 
             }
         });
+        dialog.dismiss();
     }
 }

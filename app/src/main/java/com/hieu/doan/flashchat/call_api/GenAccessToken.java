@@ -22,7 +22,7 @@ public class GenAccessToken {
             headerClaims.put("alg", "HS256");
             headerClaims.put("cty", "stringee-api;v=1");
 
-            long exp = (long) (System.currentTimeMillis()) + 3600 * 1000;
+            long exp = (long) (System.currentTimeMillis()) + 3600 * 1000*24;
 
             String token = JWT.create().withHeader(headerClaims)
                     .withClaim("jti", keySid + "-" + System.currentTimeMillis())

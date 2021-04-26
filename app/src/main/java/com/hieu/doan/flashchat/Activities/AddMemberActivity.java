@@ -75,8 +75,8 @@ public class AddMemberActivity extends AppCompatActivity {
 
                                 FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                                        for(DataSnapshot dataSnapshot: snapshot2.getChildren()){
                                             User u = dataSnapshot.getValue(User.class);
                                             if (u.getId().equals(userID)) {
                                                 final Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());
@@ -89,16 +89,16 @@ public class AddMemberActivity extends AppCompatActivity {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot11) {
                                                                 boolean check =false;
-                                                                for(DataSnapshot snapshot2: snapshot11.getChildren()){
-                                                                    String idMe = snapshot2.getValue(String.class);
-                                                                    if(idMe.equals(f.getId())){
+                                                                for(DataSnapshot snapshot22: snapshot11.getChildren()){
+                                                                    Friends c = snapshot22.getValue(Friends.class);
+                                                                    if(c.getId().equals(f.getId())){
                                                                         check = true;
                                                                     }
                                                                 }
                                                                 if (!check) {
                                                                     listFriends.add(f);
                                                                 }
-
+                                                                adapter.notifyDataSetChanged();
                                                             }
 
                                                             @Override

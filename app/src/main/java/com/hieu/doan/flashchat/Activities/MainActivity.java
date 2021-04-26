@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hieu.doan.flashchat.Adapters.ListConverAdapter;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
@@ -58,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListConverAdapter adapter;
     BottomNavigationView bottomNavigationView;
     ProgressDialog dialog;
+    String uID = "";
+    String tokenBase = "";
+    public static User userCurrent;
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onAppBackgrounded() {
@@ -87,13 +91,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         auth = FirebaseAuth.getInstance();
         token = GenAccessToken.genAccessToken(auth.getUid());
         Log.d("token", token);
+        uID = auth.getUid();
+        database = FirebaseDatabase.getInstance();
+        database.getReference("users").child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userCurrent = snapshot.getValue(User.class);
+                Log.d("chatchit", userCurrent.toString());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         setupNotification();
         recyclerView = findViewById(R.id.recyclerView);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.menuChat);
-
-        database = FirebaseDatabase.getInstance();
 
         dialog = new ProgressDialog(this);
         dialog.setMessage("Your messages are loading...");
@@ -143,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listConver.clear();
-                final String uID = auth.getUid();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     final String idChat = dataSnapshot.getKey();
                     database.getReference().child("users").addValueEventListener(new ValueEventListener() {
@@ -174,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-
     @Override
     public void onClick(View view) {
 
@@ -200,10 +213,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 return;
                             }
                             //register push notification
-                            final String token = task.getResult().getToken();
-                            client.registerPushToken(token, new StatusListener() {
+                            tokenBase = task.getResult().getToken();
+                            //set token to database
+//                            database.getReference("users").child(uID).child("token").setValue(tokenBase);
+
+                            client.registerPushToken(tokenBase, new StatusListener() {
                                 @Override
                                 public void onSuccess() {
+                                    database.getReference("users").child(uID).child("token").setValue(tokenBase);
                                     Log.d("Stringee", "Register push token successfully.");
                                     editor.putBoolean(IS_TOKEN_REGISTERED, true);
                                     editor.putString(TOKEN, token);
@@ -320,5 +337,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Vui lòng cấp quyền để thực hiện Video Call!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    //Block
+    @Override
+    public void onBackPressed() {
+
     }
 }

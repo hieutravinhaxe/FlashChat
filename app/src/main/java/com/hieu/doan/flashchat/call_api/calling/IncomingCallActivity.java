@@ -19,12 +19,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hieu.doan.flashchat.Activities.ChatActivity;
 import com.hieu.doan.flashchat.Activities.ManagerActivity;
+import com.hieu.doan.flashchat.Models.Message;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
 import com.stringee.call.StringeeCall;
@@ -49,6 +51,7 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
     private ImageButton btnVideo;
     private ImageButton btnSwitch;
     private View vControl;
+    static String sendID, receiveID, name, image;
 
     private StringeeCall mStringeeCall;
     private boolean isMute = false;
@@ -74,12 +77,16 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
         mRemoteViewContainer = (FrameLayout) findViewById(R.id.v_remote);
 
         tvFrom = (TextView) findViewById(R.id.tv_from);
-        String idRecieved = mStringeeCall.getFrom();
-        FirebaseDatabase.getInstance().getReference().child("users").child(idRecieved).addListenerForSingleValueEvent(new ValueEventListener() {
+        receiveID = mStringeeCall.getFrom();
+
+        sendID = FirebaseAuth.getInstance().getUid();
+        FirebaseDatabase.getInstance().getReference().child("users").child(receiveID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-                tvFrom.setText(user.getName());
+                User user  = snapshot.getValue(User.class);
+                name = user.getName();
+                image = user.getImage();
+                tvFrom.setText(name);
             }
 
             @Override
@@ -191,6 +198,10 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
     public void onBackPressed() {
         Intent intent = new Intent(this, ChatActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("name", name);
+        intent.putExtra("receiveID", receiveID);
+        intent.putExtra("sendID", sendID);
+        intent.putExtra("image", image);
         startActivity(intent);
     }
 
@@ -205,13 +216,13 @@ public class IncomingCallActivity extends AppCompatActivity implements View.OnCl
                         mSignalingState = signalingState;
                         switch (signalingState) {
                             case ANSWERED:
-                                tvState.setText("Đã kết nối");
+                                tvState.setText(R.string.connected);
                                 if (mMediaState == StringeeCall.MediaState.CONNECTED) {
-                                    tvState.setText("Đã kết nối");
+                                    tvState.setText(R.string.connected);
                                 }
                                 break;
                             case ENDED:
-                                tvState.setText("Kết thúc cuộc gọi");
+                                tvState.setText(R.string.end_call);
                                 endCall(true, false);
                                 break;
                         }
