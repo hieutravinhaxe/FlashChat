@@ -43,11 +43,8 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
     private FirebaseAuth auth;
     private ImageView add;
     private ImageView requests;
-<<<<<<< HEAD
-=======
-    private boolean t = false;
     User userCurrent = MainActivity.userCurrent;
->>>>>>> f11a763782d8ecc976b25ad525a39c316e0ff375
+
 
 
     @Override
@@ -139,8 +136,8 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
             }
         });
 
-<<<<<<< HEAD
-=======
+
+
         database.getReference().child("users")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -153,54 +150,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
 
                     }
                 });
-
-        database.getReference()
-                .child("users")
-                .child(auth.getUid())
-                .child("friends")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        listFriends.clear();
-                        for(DataSnapshot snapshot1: snapshot.getChildren()) {
-
-                            String status = snapshot1.child("status").getValue().toString();
-                            String friend = snapshot.getValue().toString();
-
-                            final String userID = snapshot1.getKey();
-                            if (status.equals("1")){
-
-                                database.getReference().child("users").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
-
-                                        for(DataSnapshot dataSnapshot: snapshot2.getChildren()){
-                                            User u = dataSnapshot.getValue(User.class);
-                                            if (u.getId().equals(userID)) {
-                                                Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());
-                                                listFriends.add(f);
-                                            }
-                                        }
-                                        adapter.notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-                            }
-                            else if(status.equals("0")){
-                                requests.setColorFilter(ContextCompat.getColor(FriendsActivity.this,
-                                        R.color.red));
-                            }
-                        }
-                    }
->>>>>>> f11a763782d8ecc976b25ad525a39c316e0ff375
-
-
-
-
+        
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
