@@ -28,15 +28,16 @@ import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdapter.ViewHolder> {
     private Context context;
-    List<Friends> requests;
+    List<User> requests;
     private FirebaseDatabase database;
     private FirebaseAuth auth;
 
-    public FriendRequestAdapter(Context context, List<Friends> requests){
+    public FriendRequestAdapter(Context context, List<User> requests){
         this.context = context;
         this.requests = requests;
     }
@@ -50,7 +51,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        final Friends friend = requests.get(position);
+        final User friend = requests.get(position);
         holder.textView.setText(friend.getName());
         holder.imageView.setImageResource(R.drawable.profile);
 
@@ -67,48 +68,29 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
+                        database.getReference().child("users").child(friend.getId()).child("friends").child(auth.getUid())
+                               .child("status").setValue(1);
+
                         database.getReference().child("users").child(auth.getUid())
-                                .child("friends").child(requests.get(position).getId())
-                                .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+                                .child("friends").child(friend.getId()).child("status")
+                                .setValue(1);
 
-<<<<<<< HEAD
-                                database.getReference().child("users").child(requests.get(position).getId())
-                                        .child("friends").child(auth.getUid())
-                                        .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        requests.remove(position);
-                                        notifyItemRemoved(position);
-                                    }
-                                });
-                                requests.remove(position);
-                                notifyItemRemoved(position);
-                            }
-                        });
-
-
-
-=======
                         requests.remove(friend);
                         notifyItemRemoved(position);
->>>>>>> 759fba7a64424f97c95ddbc2b6631ab8d6d6f7a7
+
                     }
                 });
 
                 builder.setNegativeButton("Xóa", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        database.getReference().child("users").child(auth.getUid()).
-                                child("friends").child(requests.get(position).getId()).removeValue()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        requests.remove(friend);
-                                        notifyItemRemoved(position);
-                                    }
-                                });
+                        database.getReference().child("users")
+                                .child(auth.getUid()).child("friends")
+                                .child(requests.get(position).getId()).removeValue();
+
+                        requests.remove(friend);
+                        notifyItemRemoved(position);
+
 
                         Toast.makeText(context, "Đã xóa yêu cầu kết bạn", Toast.LENGTH_SHORT).show();
                     }
