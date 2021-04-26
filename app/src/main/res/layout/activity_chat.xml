@@ -10,24 +10,20 @@
         android:id="@+id/cardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="60dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/sendBtn"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10sp"
             android:gravity="center"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/msgBox"
-                android:layout_width="250dp"
+                android:layout_width="230sp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
@@ -38,16 +34,16 @@
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="20dp"
-                android:layout_height="54dp"
+                android:layout_width="20sp"
+                android:layout_height="54sp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/camera" />
 
             <ImageView
                 android:id="@+id/attach"
-                android:layout_width="20dp"
-                android:layout_height="54dp"
+                android:layout_width="20sp"
+                android:layout_height="54sp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/paperclip" />
@@ -70,15 +66,14 @@
 
     <ImageView
         android:id="@+id/sendBtn"
-        android:layout_width="54dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="15dp"
+        android:layout_width="54sp"
+        android:layout_height="53sp"
+        android:layout_marginTop="3dp"
         android:background="@drawable/circle_send"
         android:padding="10sp"
         app:layout_constraintBottom_toBottomOf="@+id/cardView"
-        app:layout_constraintStart_toEndOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="@+id/cardView"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
         app:srcCompat="@drawable/send" />
 
     <androidx.cardview.widget.CardView
@@ -128,8 +123,8 @@
 
             <ImageView
                 android:id="@+id/callVideo"
-                android:layout_width="34dp"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"

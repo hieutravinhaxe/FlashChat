@@ -2,11 +2,9 @@ package com.hieu.doan.flashchat.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD
+
 import android.os.PersistableBundle;
 import android.util.Log;
-=======
->>>>>>> f11a763782d8ecc976b25ad525a39c316e0ff375
 import android.view.View;
 import android.widget.ImageView;
 
