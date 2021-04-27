@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -53,7 +54,12 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final User friend = requests.get(position);
         holder.textView.setText(friend.getName());
-        holder.imageView.setImageResource(R.drawable.profile);
+        if(friend.getImage().equals("undefined")){
+            holder.imageView.setImageResource(R.drawable.profile);
+        }
+        else{
+            Glide.with(context).load(friend.getImage()).into(holder.imageView);
+        }
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -72,32 +78,12 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                                .child("status").setValue(1);
 
                         database.getReference().child("users").child(auth.getUid())
-<<<<<<< HEAD
                                 .child("friends").child(friend.getId()).child("status")
                                 .setValue(1);
 
                         requests.remove(friend);
                         notifyItemRemoved(position);
-=======
-                                .child("friends").child(requests.get(position).getId())
-                                .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
 
-                                database.getReference().child("users").child(requests.get(position).getId())
-                                        .child("friends").child(auth.getUid())
-                                        .child("status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        requests.remove(friend);
-                                        notifyItemRemoved(position);
-                                    }
-                                });
-                                requests.remove(friend);
-                                notifyItemRemoved(position);
-                            }
-                        });
->>>>>>> f11a763782d8ecc976b25ad525a39c316e0ff375
 
                     }
                 });

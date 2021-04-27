@@ -17,12 +17,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hieu.doan.flashchat.Activities.ChatActivity;
 import com.hieu.doan.flashchat.Activities.FriendsActivity;
+import com.hieu.doan.flashchat.Activities.ManagerActivity;
 import com.hieu.doan.flashchat.Models.Friends;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
@@ -54,6 +56,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         final User friend = friends.get(position);
         holder.textView.setText(friend.getName());
         holder.imageView.setImageResource(R.drawable.profile);
+        if(friend.getImage().equals("undefined")){
+            holder.imageView.setImageResource(R.drawable.profile);
+        }
+        else{
+            Glide.with(context).load(friend.getImage()).into(holder.imageView);
+        }
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
