@@ -75,7 +75,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         database.getReference().child("users").child(friend.getId()).child("friends").child(auth.getUid())
-                               .child("status").setValue(1);
+                                .child("status").setValue(1);
 
                         database.getReference().child("users").child(auth.getUid())
                                 .child("friends").child(friend.getId()).child("status")
