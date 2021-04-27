@@ -19,8 +19,6 @@ public class MyResponse {
                 @Override
                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                     if (response.code() == 200) {
-//                        if (response.body().success != 1) {
-//                        }
                     }
                 }
 

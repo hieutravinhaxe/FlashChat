@@ -36,15 +36,15 @@ import static android.widget.Toast.LENGTH_LONG;
 public class FriendsActivity extends AppCompatActivity implements AddFriendDialog.AddfriendDialogListener {
     private BottomNavigationView bottomNavigationView;
     private RecyclerView recyclerView;
-    private ArrayList<Friends> listFriends;
+    private ArrayList<User> listFriends;
     private ArrayList<User> users;
     private FriendsAdapter adapter;
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private ImageView add;
     private ImageView requests;
-    private boolean t = false;
     User userCurrent = MainActivity.userCurrent;
+
 
 
     @Override
@@ -61,7 +61,7 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
         add = findViewById(R.id.add);
         requests = findViewById(R.id.requests);
 
-        listFriends = new ArrayList<Friends>();
+        listFriends = new ArrayList<User>();
         users = new ArrayList<User>();
 
         adapter = new FriendsAdapter(this, listFriends);
@@ -69,6 +69,56 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+
+        database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                users.clear();
+                for(DataSnapshot snapshot1: snapshot.getChildren()){
+                    User u = snapshot1.getValue(User.class);
+                    users.add(u);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        database.getReference().child("users").child(auth.getUid()).child("friends")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        listFriends.clear();
+
+                        for(DataSnapshot snapshot1: snapshot.getChildren()){
+
+                            String status = snapshot1.child("status").getValue().toString();
+                            final String userID = snapshot1.getKey();
+                            if (status.equals("1")){
+                                for (int i = 0; i < users.size(); i++){
+                                    if(userID.equals(users.get(i).getId())){
+                                        listFriends.add(users.get(i));
+                                    }
+                                }
+                            }
+                            else if(status.equals("0")){
+                                requests.setColorFilter(ContextCompat.getColor(FriendsActivity.this,
+                                        R.color.red));
+                            }
+
+
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,68 +135,6 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
                 finish();
             }
         });
-
-        database.getReference().child("users")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        listFriends.clear();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-        database.getReference()
-                .child("users")
-                .child(auth.getUid())
-                .child("friends")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        listFriends.clear();
-                        for(DataSnapshot snapshot1: snapshot.getChildren()) {
-
-                            String status = snapshot1.child("status").getValue().toString();
-                            String friend = snapshot.getValue().toString();
-
-                            final String userID = snapshot1.getKey();
-                            if (status.equals("1")){
-
-                                database.getReference().child("users").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
-
-                                        for(DataSnapshot dataSnapshot: snapshot2.getChildren()){
-                                            User u = dataSnapshot.getValue(User.class);
-                                            if (u.getId().equals(userID)) {
-                                                Friends f = new Friends(u.getName(), u.getImage(), u.getId(), u.getEmail());
-                                                listFriends.add(f);
-                                            }
-                                        }
-                                        adapter.notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-                            }
-                            else if(status.equals("0")){
-                                requests.setColorFilter(ContextCompat.getColor(FriendsActivity.this,
-                                        R.color.red));
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
 
 
 
@@ -209,30 +197,12 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
 
     private boolean checkExistEmail(final String email){
 
-        database.getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                users.clear();
-                for(DataSnapshot snapshot1: snapshot.getChildren()){
-                    User u = snapshot1.getValue(User.class);
-                    //users.add(u);
-                    if(u.getEmail().equals(email)){
-                        t = true;
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        /*for (int i = 0; i < users.size(); i++){
+        for (int i = 0; i < users.size(); i++){
             if(email.equals(users.get(i).getEmail())){
                 return true;
             }
-        }*/
-        return t;
+        }
+        return false;
     }
 
 
@@ -248,36 +218,35 @@ public class FriendsActivity extends AppCompatActivity implements AddFriendDialo
             Toast.makeText(this, "Email không tồn tại", Toast.LENGTH_SHORT).show();
         } else {
             database.getReference()
-                .child("users")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot snapshot1: snapshot.getChildren()){
-                            User u = snapshot1.getValue(User.class);
-
-                            if(email.equals(u.getEmail())){
-                                database.getReference()
-                                        .child("users")
-                                        .child(u.getId())
-                                        .child("friends")
-                                        .child(auth.getUid())
-                                        .child("status")
-                                        .setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(FriendsActivity.this, "Đã gửi lời mời kết bạn", Toast.LENGTH_SHORT).show();
-                                        MyResponse.sendNotifications(u.getToken(),"Thông báo", "Lời mời kết bạn từ "+ userCurrent.getName() );
-                                    }
-                                });
+                    .child("users")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot snapshot1: snapshot.getChildren()){
+                                User u = snapshot1.getValue(User.class);
+                                if(email.equals(u.getEmail())){
+                                    database.getReference()
+                                            .child("users")
+                                            .child(u.getId())
+                                            .child("friends")
+                                            .child(auth.getUid())
+                                            .child("status")
+                                            .setValue(0).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(FriendsActivity.this, "Đã gửi lời mời kết bạn", Toast.LENGTH_SHORT).show();
+                                            MyResponse.sendNotifications(u.getToken(),"Thông báo", "Lời mời kết bạn từ "+ userCurrent.getName() );
+                                        }
+                                    });
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
         }
 
     }

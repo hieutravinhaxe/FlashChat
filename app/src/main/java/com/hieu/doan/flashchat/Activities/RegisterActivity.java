@@ -26,6 +26,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
 
+import java.util.ArrayList;
+
 public class RegisterActivity extends AppCompatActivity {
 
     EditText phoneNumber, pwd, rePwd, email;
@@ -33,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     TextView changeLogin;
     FirebaseAuth fAuth;
     FirebaseFirestore database;
+    ArrayList<User> list = new ArrayList<>();
     String userID;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback;
     PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -62,22 +65,23 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
                 FirebaseDatabase.getInstance().getReference()
                         .child("users")
                         .addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                boolean t = true;
+                                list.clear();
                                 for(DataSnapshot snapshot1: snapshot.getChildren()){
                                     User u = snapshot1.getValue(User.class);
                                     if(u.getEmail().equals(email.getText().toString())){
-                                        t = false;
+                                        list.add(u);
                                     }
                                 }
-                                if(!t){
+                                if(list.size()>0){
                                     Toast.makeText(getApplicationContext(), "Email đã tồn tại", Toast.LENGTH_SHORT).show();
                                 }
-                                else if (validation() && t) {
+                                else if (validation() && list.size()==0) {
                                     Intent i = new Intent(RegisterActivity.this, OTPActivity.class);
                                     i.putExtra("phoneNum", phoneNumber.getText().toString());
                                     i.putExtra("email", email.getText().toString());

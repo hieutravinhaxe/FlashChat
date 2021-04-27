@@ -202,7 +202,12 @@ public class ChatActivity extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             User u = snapshot.getValue(User.class);
-                                            MyResponse.sendNotifications(u.getToken(), "Bạn có tin nhắn mới từ " + userCurrent.getName(), msgText);
+                                            try {
+                                                MyResponse.sendNotifications(u.getToken(), "Bạn có tin nhắn mới từ " + userCurrent.getName(), msgText);
+                                            }
+                                            catch (Exception ex){
+
+                                            }
                                             Log.d("token send", u.getToken());
                                         }
 

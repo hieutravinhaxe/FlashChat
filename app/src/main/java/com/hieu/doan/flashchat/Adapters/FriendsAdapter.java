@@ -1,6 +1,8 @@
 package com.hieu.doan.flashchat.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,26 +17,32 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hieu.doan.flashchat.Activities.ChatActivity;
+import com.hieu.doan.flashchat.Activities.FriendsActivity;
+import com.hieu.doan.flashchat.Activities.ManagerActivity;
 import com.hieu.doan.flashchat.Models.Friends;
+import com.hieu.doan.flashchat.Models.User;
 import com.hieu.doan.flashchat.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
     private Context context;
-    List<Friends> friends;
+    List<User> friends;
     private FirebaseDatabase database;
     private FirebaseAuth auth;
 
-    public FriendsAdapter(Context context, List<Friends> friends){
+    public FriendsAdapter(Context context, List<User> friends){
         this.context = context;
         this.friends = friends;
     }
+
 
     @NonNull
     @Override
@@ -45,9 +53,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final Friends friend = friends.get(position);
+        final User friend = friends.get(position);
         holder.textView.setText(friend.getName());
         holder.imageView.setImageResource(R.drawable.profile);
+        if(friend.getImage().equals("undefined")){
+            holder.imageView.setImageResource(R.drawable.profile);
+        }
+        else{
+            Glide.with(context).load(friend.getImage()).into(holder.imageView);
+        }
 
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -74,25 +88,37 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.btnDelete:
-                                database.getReference().child("users").child(auth.getUid()).
-                                        child("friends").child(friends.get(position).getId())
-                                        .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setTitle("Xóa bạn bè");
+                                builder.setMessage("bạn có muốn xóa người bạn này?");
+
+                                builder.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        database.getReference().child("users").child(auth.getUid()).
+                                                child("friends").child(friends.get(position).getId())
+                                                .removeValue();
+
+                                        database.getReference().child("users").child(friend.getId()).
+                                                child("friends").child(auth.getUid()).removeValue();
+
                                         friends.remove(position);
                                         notifyItemRemoved(position);
+
+                                        Toast.makeText(context, "Đã xóa", Toast.LENGTH_SHORT).show();
+
                                     }
                                 });
 
-                                database.getReference().child("users").child(friend.getId()).
-                                        child("friends").child(auth.getUid()).removeValue();
+                                builder.setNegativeButton("hủy", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
 
-
-
-                                Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                builder.show();
                                 break;
                             default:
-                                Toast.makeText(context, "Fail", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         return true;
