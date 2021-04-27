@@ -45,11 +45,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getData().size() > 0) {
-            if (!remoteMessage.getData().get("title").isEmpty()){
-                title=remoteMessage.getData().get("title");
-                message=remoteMessage.getData().get("body");
-                sendNotification(title, message);
-            }
+           try{
+               if (!remoteMessage.getData().get("title").isEmpty()){
+                   title=remoteMessage.getData().get("title");
+                   message=remoteMessage.getData().get("body");
+                   sendNotification(title, message);
+               }
+           }
+           catch (Exception e){
+
+           }
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             String pushFromStringee = remoteMessage.getData().get("stringeePushNotification");
             if (pushFromStringee != null) {
